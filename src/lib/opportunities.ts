@@ -1,0 +1,300 @@
+import type { OnboardingData, Opportunity } from "@/types/assessment";
+import { complexityToScore } from "@/lib/utils";
+
+const DEPARTMENT_OPPORTUNITIES: Record<
+  string,
+  Partial<Opportunity>[]
+> = {
+  "Customer Support": [
+    {
+      id: "customer-support",
+      title: "Customer Support Automation",
+      description:
+        "AI-powered ticket routing, response drafting, and sentiment analysis to reduce handle time.",
+      implementationComplexity: "Medium",
+      deploymentTime: "8-12 weeks",
+      confidenceScore: 92,
+      automationPercent: 65,
+      dataAvailability: 88,
+      complianceRisk: "Low",
+    },
+  ],
+  Sales: [
+    {
+      id: "sales-assistant",
+      title: "AI Sales Assistant",
+      description:
+        "Automated lead scoring, personalized outreach, and CRM enrichment for your sales team.",
+      implementationComplexity: "Medium",
+      deploymentTime: "10-14 weeks",
+      confidenceScore: 85,
+      automationPercent: 45,
+      dataAvailability: 82,
+      complianceRisk: "Low",
+    },
+  ],
+  Operations: [
+    {
+      id: "document-processing",
+      title: "Document Processing Automation",
+      description:
+        "Extract, classify, and route documents automatically with intelligent OCR and NLP.",
+      implementationComplexity: "Low",
+      deploymentTime: "6-8 weeks",
+      confidenceScore: 94,
+      automationPercent: 78,
+      dataAvailability: 90,
+      complianceRisk: "Medium",
+    },
+  ],
+  HR: [
+    {
+      id: "knowledge-assistant",
+      title: "Internal Knowledge Assistant",
+      description:
+        "Enterprise search and Q&A across policies, docs, and tribal knowledge.",
+      implementationComplexity: "Low",
+      deploymentTime: "4-6 weeks",
+      confidenceScore: 88,
+      automationPercent: 55,
+      dataAvailability: 75,
+      complianceRisk: "Low",
+    },
+  ],
+  Finance: [
+    {
+      id: "invoice-automation",
+      title: "Invoice & Expense Automation",
+      description:
+        "Automated invoice matching, expense categorization, and anomaly detection.",
+      implementationComplexity: "High",
+      deploymentTime: "14-18 weeks",
+      confidenceScore: 78,
+      automationPercent: 70,
+      dataAvailability: 85,
+      complianceRisk: "High",
+    },
+  ],
+  IT: [
+    {
+      id: "it-helpdesk",
+      title: "IT Helpdesk Automation",
+      description:
+        "Self-service resolution, ticket triage, and automated runbook execution.",
+      implementationComplexity: "Medium",
+      deploymentTime: "8-10 weeks",
+      confidenceScore: 86,
+      automationPercent: 60,
+      dataAvailability: 80,
+      complianceRisk: "Low",
+    },
+  ],
+};
+
+const BASE_OPPORTUNITIES: Partial<Opportunity>[] = [
+  {
+    id: "customer-support",
+    title: "Customer Support Automation",
+    description:
+      "AI-powered ticket routing, response drafting, and sentiment analysis.",
+    implementationComplexity: "Medium",
+    deploymentTime: "8-12 weeks",
+    confidenceScore: 90,
+    automationPercent: 65,
+    dataAvailability: 88,
+    complianceRisk: "Low",
+  },
+  {
+    id: "document-processing",
+    title: "Document Processing Automation",
+    description: "Intelligent document extraction, classification, and routing.",
+    implementationComplexity: "Low",
+    deploymentTime: "6-8 weeks",
+    confidenceScore: 93,
+    automationPercent: 78,
+    dataAvailability: 90,
+    complianceRisk: "Medium",
+  },
+  {
+    id: "sales-assistant",
+    title: "AI Sales Assistant",
+    description: "Lead scoring, outreach personalization, and pipeline insights.",
+    implementationComplexity: "Medium",
+    deploymentTime: "10-14 weeks",
+    confidenceScore: 84,
+    automationPercent: 45,
+    dataAvailability: 82,
+    complianceRisk: "Low",
+  },
+  {
+    id: "knowledge-assistant",
+    title: "Internal Knowledge Assistant",
+    description: "Enterprise Q&A across policies, docs, and internal knowledge.",
+    implementationComplexity: "Low",
+    deploymentTime: "4-6 weeks",
+    confidenceScore: 87,
+    automationPercent: 55,
+    dataAvailability: 75,
+    complianceRisk: "Low",
+  },
+];
+
+function sizeMultiplier(size: string): number {
+  switch (size) {
+    case "1-50":
+      return 0.4;
+    case "51-200":
+      return 0.7;
+    case "201-1000":
+      return 1.0;
+    case "1000+":
+      return 1.8;
+    default:
+      return 1.0;
+  }
+}
+
+function calculateSavings(
+  data: OnboardingData,
+  automationPercent: number
+): number {
+  const hourlyRate = 75000 / 2080;
+  const affectedEmployees =
+    data.companySize === "1-50"
+      ? 8
+      : data.companySize === "51-200"
+        ? 25
+        : data.companySize === "201-1000"
+          ? 80
+          : 200;
+  const hoursPerWeek = data.manualOperationsHours || 20;
+  const hoursSaved =
+    affectedEmployees * hoursPerWeek * 52 * (automationPercent / 100);
+  return Math.round(hoursSaved * hourlyRate * sizeMultiplier(data.companySize));
+}
+
+function assignQuadrant(
+  difficultyScore: number,
+  valueScore: number
+): Opportunity["quadrant"] {
+  if (valueScore >= 6 && difficultyScore <= 5) return "quick-wins";
+  if (valueScore >= 6 && difficultyScore > 5) return "strategic";
+  if (valueScore < 6 && difficultyScore <= 5) return "secondary";
+  return "avoid";
+}
+
+function buildOpportunity(
+  partial: Partial<Opportunity>,
+  data: OnboardingData,
+  boost: number
+): Opportunity {
+  const complexity = partial.implementationComplexity ?? "Medium";
+  const automationPercent = partial.automationPercent ?? 50;
+  const annualSavings = calculateSavings(data, automationPercent) + boost;
+  const difficultyScore = complexityToScore(complexity);
+  const valueScore = Math.min(
+    10,
+    Math.round(
+      (annualSavings / 50000) * 2 +
+        (partial.confidenceScore ?? 80) / 20 +
+        automationPercent / 25
+    )
+  );
+
+  return {
+    id: partial.id!,
+    title: partial.title!,
+    description: partial.description!,
+    annualSavings,
+    implementationComplexity: complexity,
+    deploymentTime: partial.deploymentTime ?? "8-12 weeks",
+    confidenceScore: partial.confidenceScore ?? 80,
+    automationPercent,
+    difficultyScore,
+    valueScore,
+    quadrant: assignQuadrant(difficultyScore, valueScore),
+    dataAvailability: partial.dataAvailability ?? 80,
+    complianceRisk: partial.complianceRisk ?? "Low",
+  };
+}
+
+export function generateOpportunities(data: OnboardingData): Opportunity[] {
+  const seen = new Set<string>();
+  const partials: Partial<Opportunity>[] = [];
+
+  for (const dept of data.departments) {
+    const deptOpps = DEPARTMENT_OPPORTUNITIES[dept];
+    if (deptOpps) {
+      for (const opp of deptOpps) {
+        if (!seen.has(opp.id!)) {
+          seen.add(opp.id!);
+          partials.push(opp);
+        }
+      }
+    }
+  }
+
+  for (const base of BASE_OPPORTUNITIES) {
+    if (!seen.has(base.id!)) {
+      seen.add(base.id!);
+      partials.push(base);
+    }
+  }
+
+  const workflowBoost = data.repetitiveWorkflows.length * 15000;
+  const processBoost = Math.min(data.businessProcesses.length * 100, 50000);
+
+  return partials
+    .map((p, i) =>
+      buildOpportunity(p, data, workflowBoost + processBoost - i * 5000)
+    )
+    .sort((a, b) => b.annualSavings - a.annualSavings)
+    .slice(0, 6);
+}
+
+export function getTopRecommendation(
+  opportunities: Opportunity[]
+): Opportunity {
+  const scored = [...opportunities].sort((a, b) => {
+    const scoreA =
+      a.valueScore * 0.4 +
+      (10 - a.difficultyScore) * 0.3 +
+      a.confidenceScore * 0.002 +
+      a.dataAvailability * 0.001;
+    const scoreB =
+      b.valueScore * 0.4 +
+      (10 - b.difficultyScore) * 0.3 +
+      b.confidenceScore * 0.002 +
+      b.dataAvailability * 0.001;
+    return scoreB - scoreA;
+  });
+  return scored[0];
+}
+
+export function buildRecommendationReasons(
+  opportunity: Opportunity
+): string[] {
+  const reasons: string[] = [];
+
+  if (opportunity.annualSavings >= 200000) {
+    reasons.push("Highest projected ROI among evaluated initiatives");
+  } else {
+    reasons.push("Strong return on investment relative to implementation cost");
+  }
+
+  if (opportunity.implementationComplexity === "Low") {
+    reasons.push("Low implementation complexity enables fast time-to-value");
+  } else if (opportunity.implementationComplexity === "Medium") {
+    reasons.push("Balanced implementation complexity with manageable risk");
+  }
+
+  if (opportunity.dataAvailability >= 80) {
+    reasons.push("Strong data availability supports reliable AI performance");
+  }
+
+  if (opportunity.complianceRisk === "Low") {
+    reasons.push("Low compliance risk simplifies deployment and governance");
+  }
+
+  return reasons.slice(0, 4);
+}
