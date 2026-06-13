@@ -18,9 +18,7 @@ export default function AnalysisPage() {
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    if (!onboarding.industry) {
-      router.replace("/onboarding");
-    }
+    if (!onboarding.industry) router.replace("/onboarding");
   }, [onboarding.industry, router]);
 
   if (!onboarding.industry) return null;
@@ -28,44 +26,33 @@ export default function AnalysisPage() {
   return (
     <PageTransition>
       <Nav ctaHref="/prioritize" ctaLabel="Prioritize" showCta={showResults} />
-
       {loading && !showResults ? (
-        <AnalysisLoader
-          onComplete={() => {
-            setLoading(false);
-            setShowResults(true);
-          }}
-        />
+        <AnalysisLoader onComplete={() => { setLoading(false); setShowResults(true); }} />
       ) : (
-        <div className="mx-auto max-w-6xl px-6 pb-24 pt-28">
-          <div className="mb-12">
-            <p className="mb-2 text-sm text-muted-foreground">
+        <main className="mx-auto max-w-6xl px-6 pb-24 pt-36">
+          <header className="mb-20 max-w-4xl">
+            <p className="eyebrow mb-6">
               Analysis complete · {opportunities.length} opportunities identified
             </p>
-            <h1 className="text-3xl font-bold md:text-4xl">
-              AI opportunities for your organization
+            <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">
+              Where AI can create meaningful value.
             </h1>
-            <p className="mt-3 max-w-2xl text-muted-foreground">
+            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
               Based on your {onboarding.industry} profile across{" "}
               {(onboarding.departments ?? []).join(", ")}.
             </p>
-          </div>
-
-          <div className="mb-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+          </header>
+          <div className="mb-16 border-b border-border">
             {opportunities.map((opp, i) => (
               <OpportunityCard key={opp.id} opportunity={opp} index={i} />
             ))}
           </div>
-
-          <div className="flex justify-center">
-            <Button variant="gradient" size="lg" asChild>
-              <Link href="/prioritize">
-                Prioritize opportunities
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+          <div className="flex justify-end">
+            <Button size="lg" asChild>
+              <Link href="/prioritize">Prioritize opportunities <ArrowRight /></Link>
             </Button>
           </div>
-        </div>
+        </main>
       )}
     </PageTransition>
   );

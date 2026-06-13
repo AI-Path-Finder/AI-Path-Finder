@@ -16,10 +16,10 @@ import type { Opportunity } from "@/types/assessment";
 import Link from "next/link";
 
 const QUADRANT_LABELS = {
-  "quick-wins": { label: "Quick Wins", color: "text-emerald-400", bg: "bg-emerald-500/10" },
-  strategic: { label: "Strategic Projects", color: "text-indigo-400", bg: "bg-indigo-500/10" },
-  secondary: { label: "Secondary", color: "text-amber-400", bg: "bg-amber-500/10" },
-  avoid: { label: "Avoid", color: "text-red-400", bg: "bg-red-500/10" },
+  "quick-wins": { label: "Quick Wins", color: "text-foreground", bg: "bg-secondary" },
+  strategic: { label: "Strategic Projects", color: "text-foreground", bg: "bg-secondary" },
+  secondary: { label: "Secondary", color: "text-muted-foreground", bg: "bg-secondary" },
+  avoid: { label: "Avoid", color: "text-muted-foreground", bg: "bg-secondary" },
 };
 
 interface PriorityMatrixProps {
@@ -43,7 +43,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
 
   return (
     <>
-      <div className="relative mx-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-4 backdrop-blur-xl">
+      <div className="relative w-full overflow-hidden border-y border-border py-8">
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="w-full"
@@ -56,28 +56,28 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
             y={padding}
             width={plotW / 2}
             height={plotH / 2}
-            fill="rgba(16, 185, 129, 0.04)"
+            fill="rgba(29, 26, 23, 0.025)"
           />
           <rect
             x={padding + plotW / 2}
             y={padding}
             width={plotW / 2}
             height={plotH / 2}
-            fill="rgba(99, 102, 241, 0.04)"
+            fill="rgba(29, 26, 23, 0.045)"
           />
           <rect
             x={padding}
             y={padding + plotH / 2}
             width={plotW / 2}
             height={plotH / 2}
-            fill="rgba(245, 158, 11, 0.04)"
+            fill="transparent"
           />
           <rect
             x={padding + plotW / 2}
             y={padding + plotH / 2}
             width={plotW / 2}
             height={plotH / 2}
-            fill="rgba(239, 68, 68, 0.04)"
+            fill="rgba(29, 26, 23, 0.02)"
           />
 
           {/* Grid lines */}
@@ -88,7 +88,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                 y1={padding}
                 x2={toX(n)}
                 y2={padding + plotH}
-                stroke="rgba(255,255,255,0.06)"
+                stroke="rgba(29,26,23,0.10)"
                 strokeDasharray="4 4"
               />
               <line
@@ -96,7 +96,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                 y1={toY(n)}
                 x2={padding + plotW}
                 y2={toY(n)}
-                stroke="rgba(255,255,255,0.06)"
+                stroke="rgba(29,26,23,0.10)"
                 strokeDasharray="4 4"
               />
             </g>
@@ -108,14 +108,14 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
             y1={padding + plotH}
             x2={padding + plotW}
             y2={padding + plotH}
-            stroke="rgba(255,255,255,0.2)"
+            stroke="rgba(29,26,23,0.35)"
           />
           <line
             x1={padding}
             y1={padding}
             x2={padding}
             y2={padding + plotH}
-            stroke="rgba(255,255,255,0.2)"
+            stroke="rgba(29,26,23,0.35)"
           />
 
           {/* Midlines */}
@@ -124,14 +124,14 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
             y1={padding}
             x2={toX(5.5)}
             y2={padding + plotH}
-            stroke="rgba(255,255,255,0.1)"
+            stroke="rgba(29,26,23,0.18)"
           />
           <line
             x1={padding}
             y1={toY(5.5)}
             x2={padding + plotW}
             y2={toY(5.5)}
-            stroke="rgba(255,255,255,0.1)"
+            stroke="rgba(29,26,23,0.18)"
           />
 
           {/* Labels */}
@@ -154,16 +154,16 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
           </text>
 
           {/* Quadrant labels */}
-          <text x={padding + 12} y={padding + 20} className="fill-emerald-400/70 text-[10px] font-medium">
+          <text x={padding + 12} y={padding + 20} className="fill-foreground text-[10px] font-medium">
             Quick Wins
           </text>
-          <text x={padding + plotW / 2 + 12} y={padding + 20} className="fill-indigo-400/70 text-[10px] font-medium">
+          <text x={padding + plotW / 2 + 12} y={padding + 20} className="fill-foreground text-[10px] font-medium">
             Strategic
           </text>
-          <text x={padding + 12} y={padding + plotH / 2 + 20} className="fill-amber-400/70 text-[10px] font-medium">
+          <text x={padding + 12} y={padding + plotH / 2 + 20} className="fill-muted-foreground text-[10px] font-medium">
             Secondary
           </text>
-          <text x={padding + plotW / 2 + 12} y={padding + plotH / 2 + 20} className="fill-red-400/70 text-[10px] font-medium">
+          <text x={padding + plotW / 2 + 12} y={padding + plotH / 2 + 20} className="fill-muted-foreground text-[10px] font-medium">
             Avoid
           </text>
 
@@ -187,8 +187,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                     cx={cx}
                     cy={cy}
                     r={24}
-                    fill="rgba(99, 102, 241, 0.15)"
-                    className="animate-pulse"
+                    fill="rgba(29,26,23,0.08)"
                   />
                 )}
                 <motion.circle
@@ -196,7 +195,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                   cy={cy}
                   r={isHovered ? 12 : 9}
                   fill="url(#dotGradient)"
-                  stroke={isHovered ? "#818cf8" : "rgba(255,255,255,0.3)"}
+                  stroke="#1d1a17"
                   strokeWidth={2}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -210,8 +209,8 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                       width={160}
                       height={40}
                       rx={8}
-                      fill="rgba(9,9,11,0.95)"
-                      stroke="rgba(255,255,255,0.1)"
+                      fill="#f7f3eb"
+                      stroke="rgba(29,26,23,0.2)"
                     />
                     <text
                       x={cx}
@@ -227,7 +226,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                       x={cx}
                       y={cy - 22}
                       textAnchor="middle"
-                      className="fill-emerald-400 text-[10px] font-mono"
+                      className="fill-muted-foreground text-[10px]"
                     >
                       {formatCurrency(opp.annualSavings)}/yr
                     </text>
@@ -239,8 +238,8 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
 
           <defs>
             <radialGradient id="dotGradient">
-              <stop offset="0%" stopColor="#818cf8" />
-              <stop offset="100%" stopColor="#22d3ee" />
+              <stop offset="0%" stopColor="#1d1a17" />
+              <stop offset="100%" stopColor="#6f6962" />
             </radialGradient>
           </defs>
         </svg>
@@ -266,7 +265,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-muted-foreground">Annual savings</p>
-                    <p className="font-mono text-lg text-emerald-400">
+                    <p className="text-lg font-semibold">
                       {formatCurrency(selected.annualSavings)}
                     </p>
                   </div>
@@ -275,7 +274,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                     <p className="font-mono text-lg">{selected.confidenceScore}%</p>
                   </div>
                 </div>
-                <Button variant="gradient" className="w-full" asChild>
+                <Button className="w-full" asChild>
                   <Link href="/roi">Simulate ROI</Link>
                 </Button>
               </div>

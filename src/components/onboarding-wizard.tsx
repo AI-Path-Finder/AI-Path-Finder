@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
@@ -116,6 +116,22 @@ export function OnboardingWizard() {
     if (step > 0) setStep((s) => s - 1);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.key === "Enter" &&
+        !event.shiftKey &&
+        document.activeElement?.tagName !== "TEXTAREA" &&
+        canContinue()
+      ) {
+        event.preventDefault();
+        goNext();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  });
+
   const toggleDepartment = (dept: string) => {
     const current = data.departments ?? [];
     setOnboarding({
@@ -146,9 +162,9 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-2xl flex-col px-6 pb-12 pt-28">
-      <div className="mb-8">
-        <Progress value={progress} className="mb-4" />
+    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 pb-10 pt-28 md:px-10 md:pt-36">
+      <div className="mb-14">
+        <Progress value={progress} className="mb-5 h-px" />
         <StepIndicator
           current={step + 1}
           total={totalSteps}
@@ -159,25 +175,25 @@ export function OnboardingWizard() {
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
-          initial={{ opacity: 0, x: 40 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -40 }}
-          transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="flex-1"
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-1 flex-col justify-center pb-16"
         >
-          <h1 className="mb-3 text-3xl font-bold tracking-tight md:text-4xl">
+          <h1 className="mb-5 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.055em] md:text-6xl">
             {step < STEP_TITLES.length
               ? STEP_TITLES[step]
               : "Ready to analyze your organization?"}
           </h1>
-          <p className="mb-10 text-lg text-muted-foreground">
+          <p className="mb-12 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             {step < STEP_SUBTITLES.length
               ? STEP_SUBTITLES[step]
               : "Review your inputs and launch the AI opportunity analysis."}
           </p>
 
           {step === 0 && (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid max-w-2xl gap-x-10 gap-y-1 sm:grid-cols-2">
               {INDUSTRIES.map((ind) => (
                 <OptionButton
                   key={ind}
@@ -191,24 +207,21 @@ export function OnboardingWizard() {
           )}
 
           {step === 1 && (
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid max-w-2xl grid-cols-2 gap-x-10 gap-y-1">
               {COMPANY_SIZES.map((size) => (
                 <OptionButton
                   key={size.value}
                   selected={data.companySize === size.value}
                   onClick={() => setOnboarding({ companySize: size.value })}
                 >
-                  <span className="text-2xl font-bold">{size.label}</span>
-                  <span className="text-xs text-muted-foreground">
-                    employees
-                  </span>
+                  <span className="text-lg">{size.label} employees</span>
                 </OptionButton>
               ))}
             </div>
           )}
 
           {step === 2 && (
-            <div className="flex flex-wrap gap-3">
+            <div className="grid max-w-2xl gap-x-10 gap-y-1 sm:grid-cols-2">
               {DEPARTMENTS.map((dept) => (
                 <OptionChip
                   key={dept}
@@ -228,13 +241,13 @@ export function OnboardingWizard() {
               onChange={(e) =>
                 setOnboarding({ businessProcesses: e.target.value })
               }
-              className="min-h-[180px] text-base"
+              className="min-h-[220px] text-2xl"
             />
           )}
 
           {step === 4 && (
             <div className="space-y-6">
-              <div className="flex flex-wrap gap-2">
+              <div className="grid max-w-2xl gap-x-10 gap-y-1 sm:grid-cols-2">
                 {WORKFLOW_SUGGESTIONS.map((wf) => (
                   <OptionChip
                     key={wf}
@@ -245,7 +258,7 @@ export function OnboardingWizard() {
                   </OptionChip>
                 ))}
               </div>
-              <div className="flex gap-2">
+              <div className="flex max-w-2xl gap-4">
                 <Input
                   placeholder="Add custom workflow..."
                   value={customWorkflow}
@@ -262,7 +275,7 @@ export function OnboardingWizard() {
           {step === 5 && (
             <div className="space-y-6">
               <div className="text-center">
-                <span className="font-mono text-6xl font-bold text-gradient">
+                <span className="text-7xl font-semibold tracking-[-0.06em]">
                   {data.manualOperationsHours}
                 </span>
                 <span className="ml-2 text-xl text-muted-foreground">
@@ -279,7 +292,7 @@ export function OnboardingWizard() {
                     manualOperationsHours: Number(e.target.value),
                   })
                 }
-                className="w-full accent-indigo-500"
+                className="w-full accent-foreground"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>Minimal</span>
@@ -289,7 +302,7 @@ export function OnboardingWizard() {
           )}
 
           {step === 6 && (
-            <div className="glass rounded-2xl p-6 space-y-4">
+            <div className="max-w-2xl divide-y divide-border border-y border-border">
               <ReviewRow label="Industry" value={data.industry} />
               <ReviewRow label="Company size" value={data.companySize} />
               <ReviewRow
@@ -309,7 +322,7 @@ export function OnboardingWizard() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="mt-12 flex items-center justify-between">
+      <div className="flex items-center justify-between border-t border-border pt-5">
         <Button
           variant="ghost"
           onClick={goBack}
@@ -328,7 +341,7 @@ export function OnboardingWizard() {
           {step === totalSteps - 1 ? (
             <>
               Launch Analysis
-              <SparklesIcon />
+              <ArrowRight className="h-4 w-4" />
             </>
           ) : (
             <>
@@ -337,6 +350,9 @@ export function OnboardingWizard() {
             </>
           )}
         </Button>
+        <span className="hidden text-xs text-muted-foreground sm:block">
+          Press Enter ↵
+        </span>
       </div>
     </div>
   );
@@ -356,10 +372,10 @@ function OptionButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center rounded-2xl border p-6 text-left transition-all",
+        "flex items-center border-b border-border py-4 text-left transition-colors",
         selected
-          ? "border-indigo-500/50 bg-indigo-500/10 ring-1 ring-indigo-500/30"
-          : "border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.06]"
+          ? "border-foreground text-foreground"
+          : "text-muted-foreground hover:text-foreground"
       )}
     >
       {children}
@@ -381,13 +397,15 @@ function OptionChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-all",
+        "flex items-center gap-3 border-b border-border py-4 text-left text-base transition-colors",
         selected
-          ? "border-indigo-500/50 bg-indigo-500/15 text-foreground"
-          : "border-white/10 bg-white/[0.03] text-muted-foreground hover:border-white/20 hover:text-foreground"
+          ? "border-foreground text-foreground"
+          : "text-muted-foreground hover:text-foreground"
       )}
     >
-      {selected && <Check className="h-3.5 w-3.5 text-indigo-400" />}
+      <span className="flex h-5 w-5 items-center justify-center border border-current text-[10px]">
+        {selected && <Check className="h-3 w-3" />}
+      </span>
       {children}
     </button>
   );
@@ -401,7 +419,7 @@ function ReviewRow({
   value: string | undefined;
 }) {
   return (
-    <div className="flex justify-between gap-4 border-b border-white/5 pb-3 last:border-0">
+    <div className="grid gap-2 py-4 sm:grid-cols-[180px_1fr]">
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="text-sm font-medium text-right">
         {value ?? "Not provided"}
@@ -410,16 +428,3 @@ function ReviewRow({
   );
 }
 
-function SparklesIcon() {
-  return (
-    <svg
-      className="h-4 w-4"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z" />
-    </svg>
-  );
-}

@@ -8,24 +8,14 @@ import { Nav } from "@/components/nav";
 import { PriorityMatrix } from "@/components/priority-matrix";
 import { PageTransition } from "@/components/page-transition";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useAssessment } from "@/context/assessment-provider";
-
-const LEGEND = [
-  { key: "quick-wins", label: "Quick Wins", variant: "success" as const },
-  { key: "strategic", label: "Strategic Projects", variant: "default" as const },
-  { key: "secondary", label: "Secondary", variant: "warning" as const },
-  { key: "avoid", label: "Avoid", variant: "secondary" as const },
-];
 
 export default function PrioritizePage() {
   const router = useRouter();
   const { opportunities } = useAssessment();
 
   useEffect(() => {
-    if (opportunities.length === 0) {
-      router.replace("/onboarding");
-    }
+    if (opportunities.length === 0) router.replace("/onboarding");
   }, [opportunities.length, router]);
 
   if (opportunities.length === 0) return null;
@@ -33,37 +23,24 @@ export default function PrioritizePage() {
   return (
     <PageTransition>
       <Nav ctaHref="/roi" ctaLabel="Simulate ROI" />
-
-      <div className="mx-auto max-w-5xl px-6 pb-24 pt-28">
-        <div className="mb-10 text-center">
-          <h1 className="mb-3 text-3xl font-bold md:text-4xl">
-            Prioritization matrix
+      <main className="mx-auto max-w-6xl px-6 pb-24 pt-36">
+        <header className="mb-16 max-w-4xl">
+          <p className="eyebrow mb-6">Portfolio view</p>
+          <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">
+            Decide what deserves attention first.
           </h1>
-          <p className="mx-auto max-w-xl text-muted-foreground">
-            Opportunities positioned by implementation difficulty and business
-            value. Click any project for details.
+          <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            Compare business value with implementation difficulty. Select any
+            initiative to review the reasoning behind its position.
           </p>
-        </div>
-
+        </header>
         <PriorityMatrix opportunities={opportunities} />
-
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          {LEGEND.map((item) => (
-            <Badge key={item.key} variant={item.variant}>
-              {item.label}
-            </Badge>
-          ))}
-        </div>
-
-        <div className="mt-12 flex justify-center">
-          <Button variant="gradient" size="lg" asChild>
-            <Link href="/roi">
-              Simulate ROI
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+        <div className="mt-16 flex justify-end border-t border-border pt-8">
+          <Button size="lg" asChild>
+            <Link href="/roi">Simulate ROI <ArrowRight /></Link>
           </Button>
         </div>
-      </div>
+      </main>
     </PageTransition>
   );
 }
