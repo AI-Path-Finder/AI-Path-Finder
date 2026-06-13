@@ -56,9 +56,33 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Without Supabase, assessment data persists in `localStorage`.
 
-## Deploy
+## Deploy to GitHub Pages
 
-Deploy to [Vercel](https://vercel.com) with one click. Set environment variables if using Supabase.
+The project is configured as a static Next.js export and deploys automatically
+to GitHub Pages from the `main` or `master` branch.
+
+1. Create the GitHub repository `ai-path-finder/AI-Path-Finder`.
+2. Push this project to its `main` or `master` branch.
+3. In the repository, open **Settings > Pages**.
+4. Under **Build and deployment > Source**, select **GitHub Actions**.
+5. Wait for the `Deploy to GitHub Pages` workflow to finish.
+
+The application will be available at:
+
+`https://ai-path-finder.github.io/AI-Path-Finder/`
+
+To verify the same static export locally:
+
+```bash
+npm run build:pages
+```
+
+The generated website is written to `out/`.
+
+Supabase remains optional. To enable persistence when deploying through GitHub
+Actions, add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as
+repository variables and expose them in the build step. Without them, the app
+uses browser `localStorage`.
 
 ## License
 
