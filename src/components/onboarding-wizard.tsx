@@ -393,11 +393,19 @@ function OptionChip({
   );
 }
 
-function ReviewRow({ label, value }: { label: string; value: string }) {
+function ReviewRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | undefined;
+}) {
   return (
     <div className="flex justify-between gap-4 border-b border-white/5 pb-3 last:border-0">
       <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="text-sm font-medium text-right">{value}</span>
+      <span className="text-sm font-medium text-right">
+        {value ?? "Not provided"}
+      </span>
     </div>
   );
 }
