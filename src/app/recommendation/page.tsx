@@ -19,8 +19,10 @@ export default function RecommendationPage() {
   return (
     <PageTransition>
       <Nav showCta={false} />
-      <main className="mx-auto max-w-6xl px-6 pb-24 pt-36">
-        <ExecutiveSummary recommendation={recommendation} />
+      <main className="mx-auto max-w-6xl px-6 pb-24 pt-32">
+        <div className="rounded-[38px] bg-[#ffe0d8] p-8 md:p-14">
+          <ExecutiveSummary recommendation={recommendation} />
+        </div>
         <div className="mt-10 flex flex-wrap gap-3">
           <Button asChild><Link href="/prioritize">Review all opportunities</Link></Button>
           <Button variant="outline" onClick={() => { resetAssessment(); router.push("/onboarding"); }}>Start new assessment</Button>

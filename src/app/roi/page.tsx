@@ -28,11 +28,11 @@ export default function ROIPage() {
   return (
     <PageTransition>
       <Nav showCta={false} />
-      <main className="mx-auto max-w-6xl px-6 pb-24 pt-36">
-        <header className="mb-16 max-w-4xl">
+      <main className="mx-auto max-w-6xl px-6 pb-24 pt-32">
+        <header className="mb-12 rounded-[38px] bg-[#e8ddff] p-8 md:p-14">
           <p className="eyebrow mb-6">ROI simulation · {selected.title}</p>
           <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">Understand the return before you invest.</h1>
-          <p className="mt-7 max-w-xl text-lg leading-relaxed text-muted-foreground">Adjust the assumptions and see how the financial case changes in real time.</p>
+          <p className="mt-7 max-w-xl text-lg leading-relaxed text-foreground/65">Adjust the assumptions and see how the financial case changes in real time.</p>
         </header>
         <ROICalculator inputs={inputs} onChange={(partial) => setROIInputs({ ...inputs, ...partial })} />
         <div className="mt-10 flex justify-end"><Button size="lg" onClick={handleContinue}>View recommendation <ArrowRight /></Button></div>

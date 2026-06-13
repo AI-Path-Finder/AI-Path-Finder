@@ -19,7 +19,13 @@ export function OpportunityCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.06 }}
       onClick={onClick}
-      className="grid gap-7 border-t border-border py-10 md:grid-cols-[70px_1.4fr_1fr] md:py-14"
+      className={`mb-4 grid gap-7 rounded-[28px] p-7 md:grid-cols-[70px_1.4fr_1fr] md:p-10 ${
+        index % 3 === 0
+          ? "bg-[#f0edff]"
+          : index % 3 === 1
+            ? "bg-[#fff0cb]"
+            : "bg-[#ffe0d8]"
+      }`}
     >
       <span className="text-sm text-muted-foreground">
         {String(index + 1).padStart(2, "0")}

@@ -6,7 +6,7 @@ import { PageTransition } from "@/components/page-transition";
 
 export default function OnboardingPage() {
   return (
-    <PageTransition>
+    <PageTransition className="min-h-screen bg-[#f8f5ff]">
       <Nav showCta={false} />
       <OnboardingWizard />
     </PageTransition>

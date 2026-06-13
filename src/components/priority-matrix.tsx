@@ -43,7 +43,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
 
   return (
     <>
-      <div className="relative w-full overflow-hidden border-y border-border py-8">
+      <div className="relative w-full overflow-hidden rounded-[32px] bg-[#f0edff] p-4 py-8 md:p-8">
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="w-full"

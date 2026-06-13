@@ -162,9 +162,9 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 pb-10 pt-28 md:px-10 md:pt-36">
-      <div className="mb-14">
-        <Progress value={progress} className="mb-5 h-px" />
+    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 pb-10 pt-24 md:px-10 md:pt-28">
+      <div className="mb-8">
+        <Progress value={progress} className="mb-5 h-1 rounded-full" />
         <StepIndicator
           current={step + 1}
           total={totalSteps}
@@ -176,11 +176,15 @@ export function OnboardingWizard() {
         <motion.div
           key={step}
           initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, x: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-1 flex-col justify-center pb-16"
+          className="flex flex-1 flex-col justify-center pb-10"
         >
+          <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-[#6b4eff]">
+            <span>{String(step + 1).padStart(2, "0")}</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </div>
           <h1 className="mb-5 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.055em] md:text-6xl">
             {step < STEP_TITLES.length
               ? STEP_TITLES[step]
@@ -193,7 +197,7 @@ export function OnboardingWizard() {
           </p>
 
           {step === 0 && (
-            <div className="grid max-w-2xl gap-x-10 gap-y-1 sm:grid-cols-2">
+            <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
               {INDUSTRIES.map((ind) => (
                 <OptionButton
                   key={ind}
@@ -207,7 +211,7 @@ export function OnboardingWizard() {
           )}
 
           {step === 1 && (
-            <div className="grid max-w-2xl grid-cols-2 gap-x-10 gap-y-1">
+            <div className="grid max-w-2xl grid-cols-2 gap-3">
               {COMPANY_SIZES.map((size) => (
                 <OptionButton
                   key={size.value}
@@ -221,7 +225,7 @@ export function OnboardingWizard() {
           )}
 
           {step === 2 && (
-            <div className="grid max-w-2xl gap-x-10 gap-y-1 sm:grid-cols-2">
+            <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
               {DEPARTMENTS.map((dept) => (
                 <OptionChip
                   key={dept}
@@ -247,7 +251,7 @@ export function OnboardingWizard() {
 
           {step === 4 && (
             <div className="space-y-6">
-              <div className="grid max-w-2xl gap-x-10 gap-y-1 sm:grid-cols-2">
+              <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
                 {WORKFLOW_SUGGESTIONS.map((wf) => (
                   <OptionChip
                     key={wf}
@@ -322,7 +326,7 @@ export function OnboardingWizard() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="flex items-center justify-between border-t border-border pt-5">
+      <div className="flex items-center justify-between pt-5">
         <Button
           variant="ghost"
           onClick={goBack}
@@ -372,10 +376,10 @@ function OptionButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex items-center border-b border-border py-4 text-left transition-colors",
+        "flex min-h-16 items-center rounded-lg border-2 px-4 py-3 text-left transition-all",
         selected
-          ? "border-foreground text-foreground"
-          : "text-muted-foreground hover:text-foreground"
+          ? "border-[#6b4eff] bg-[#e8ddff] text-foreground"
+          : "border-border bg-white/60 text-foreground hover:border-[#6b4eff]/50"
       )}
     >
       {children}
@@ -397,10 +401,10 @@ function OptionChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 border-b border-border py-4 text-left text-base transition-colors",
+        "flex min-h-14 items-center gap-3 rounded-lg border-2 px-4 py-3 text-left text-base transition-all",
         selected
-          ? "border-foreground text-foreground"
-          : "text-muted-foreground hover:text-foreground"
+          ? "border-[#6b4eff] bg-[#e8ddff] text-foreground"
+          : "border-border bg-white/60 text-foreground hover:border-[#6b4eff]/50"
       )}
     >
       <span className="flex h-5 w-5 items-center justify-center border border-current text-[10px]">
