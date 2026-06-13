@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:pages": "cross-env GITHUB_ACTIONS=true GITHUB_REPOSITORY=ai-path-finder/AI-Path-Finder next build",
+    "build:pages": "cross-env GITHUB_ACTIONS=true GITHUB_REPOSITORY=AI-Adopt/AI-Adopt.github.io next build",
     "start": "next start",
     "lint": "next lint"
   },

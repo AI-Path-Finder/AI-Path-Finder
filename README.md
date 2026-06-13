@@ -61,7 +61,7 @@ Without Supabase, assessment data persists in `localStorage`.
 The project is configured as a static Next.js export and deploys automatically
 to GitHub Pages from the `master` branch.
 
-1. Create the GitHub repository `ai-path-finder/AI-Path-Finder`.
+1. Create the GitHub repository `AI-Adopt/AI-Adopt.github.io`.
 2. Push this project to its `master` branch.
 3. In the repository, open **Settings > Pages**.
 4. Under **Build and deployment > Source**, select **GitHub Actions**.
@@ -69,7 +69,7 @@ to GitHub Pages from the `master` branch.
 
 The application will be available at:
 
-`https://ai-path-finder.github.io/AI-Path-Finder/`
+`https://ai-adopt.github.io/`
 
 To verify the same static export locally:
 
