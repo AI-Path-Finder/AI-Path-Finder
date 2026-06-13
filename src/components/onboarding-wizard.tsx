@@ -87,6 +87,13 @@ export function OnboardingWizard() {
   const [customWorkflow, setCustomWorkflow] = useState("");
   const totalSteps = stepSchemas.length + 1;
 
+  useEffect(() => {
+    const shouldContinue = new URLSearchParams(window.location.search).get("continue");
+    if (shouldContinue === "industry" && onboarding.industry) {
+      setStep(1);
+    }
+  }, [onboarding.industry]);
+
   const data: Partial<OnboardingData> = {
     industry: onboarding.industry ?? "",
     companySize: onboarding.companySize,

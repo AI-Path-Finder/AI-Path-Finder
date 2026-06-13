@@ -1,4 +1,4 @@
-# Orion AI
+# AdoptAI
 
 A modern AI-native SaaS web application that helps companies discover, prioritize, and evaluate AI implementation opportunities.
 

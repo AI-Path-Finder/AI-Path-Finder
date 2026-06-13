@@ -24,7 +24,8 @@ import {
 import { defaultROIInputs } from "@/lib/roi";
 import { implementationCostForComplexity } from "@/lib/utils";
 
-const STORAGE_KEY = "orion-ai-assessment";
+const STORAGE_KEY = "adopt-ai-assessment";
+const LEGACY_STORAGE_KEY = "orion-ai-assessment";
 
 const initialState: AssessmentState = {
   onboarding: {},
@@ -52,7 +53,9 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored =
+        localStorage.getItem(STORAGE_KEY) ??
+        localStorage.getItem(LEGACY_STORAGE_KEY);
       if (stored) {
         setState(JSON.parse(stored));
       }
@@ -131,6 +134,7 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
   const resetAssessment = useCallback(() => {
     setState(initialState);
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
   }, []);
 
   const getSelectedOpportunity = useCallback(() => {

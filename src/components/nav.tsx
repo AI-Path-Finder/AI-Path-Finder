@@ -20,7 +20,7 @@ export function Nav({
     <header className={`absolute top-0 z-50 w-full ${inverted ? "text-white" : ""}`}>
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-6 md:px-10">
         <Link href="/" className="text-base font-bold tracking-[-0.03em]">
-          ProcessMind
+          AdoptAI
         </Link>
         <nav className="hidden items-center gap-8 text-sm md:flex">
           <Link href="/#platform" className={inverted ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"}>Platform</Link>

@@ -7,7 +7,7 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ProcessMind — AI opportunity intelligence",
+  title: "AdoptAI — AI opportunity intelligence",
   description: "Discover where AI creates value, prioritize initiatives and simulate ROI before investing.",
 };
 
