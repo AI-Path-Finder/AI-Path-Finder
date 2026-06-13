@@ -41,7 +41,7 @@ jobs:
       - name: Report build failure
         if: steps.build.outcome == 'failure'
         run: |
-          tail -n 80 build.log | while IFS= read -r line; do
+          tail -n 8 build.log | while IFS= read -r line; do
             echo "::error::$line"
           done
           exit 1
