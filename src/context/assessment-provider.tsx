@@ -35,6 +35,33 @@ const initialState: AssessmentState = {
   recommendation: null,
 };
 
+function normalizeStoredState(value: unknown): AssessmentState {
+  if (!value || typeof value !== "object") return initialState;
+  const stored = value as Partial<AssessmentState>;
+
+  return {
+    onboarding:
+      stored.onboarding && typeof stored.onboarding === "object"
+        ? stored.onboarding
+        : {},
+    opportunities: Array.isArray(stored.opportunities)
+      ? stored.opportunities
+      : [],
+    selectedOpportunityId:
+      typeof stored.selectedOpportunityId === "string"
+        ? stored.selectedOpportunityId
+        : null,
+    roiInputs:
+      stored.roiInputs && typeof stored.roiInputs === "object"
+        ? stored.roiInputs
+        : {},
+    recommendation:
+      stored.recommendation && typeof stored.recommendation === "object"
+        ? stored.recommendation
+        : null,
+  };
+}
+
 interface AssessmentContextValue extends AssessmentState {
   setOnboarding: (data: Partial<OnboardingData>) => void;
   completeOnboarding: (data: OnboardingData) => void;
@@ -57,7 +84,7 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
         localStorage.getItem(STORAGE_KEY) ??
         localStorage.getItem(LEGACY_STORAGE_KEY);
       if (stored) {
-        setState(JSON.parse(stored));
+        setState(normalizeStoredState(JSON.parse(stored)));
       }
     } catch {
       /* ignore */

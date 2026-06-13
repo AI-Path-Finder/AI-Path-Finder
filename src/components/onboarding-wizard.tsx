@@ -88,8 +88,9 @@ export function OnboardingWizard() {
   const totalSteps = stepSchemas.length + 1;
 
   useEffect(() => {
-    const shouldContinue = new URLSearchParams(window.location.search).get("continue");
-    if (shouldContinue === "industry" && onboarding.industry) {
+    const startStep = sessionStorage.getItem("adopt-ai-start-step");
+    sessionStorage.removeItem("adopt-ai-start-step");
+    if (startStep === "1" && onboarding.industry) {
       setStep(1);
     }
   }, [onboarding.industry]);

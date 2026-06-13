@@ -132,7 +132,8 @@ function AssessmentPreview() {
 
   const continueAssessment = () => {
     setOnboarding({ industry: selected });
-    router.push("/onboarding?continue=industry");
+    sessionStorage.setItem("adopt-ai-start-step", "1");
+    router.push("/onboarding");
   };
 
   return (
