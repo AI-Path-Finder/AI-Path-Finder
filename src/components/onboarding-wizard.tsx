@@ -10,18 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { useAssessment } from "@/context/assessment-provider";
+import { useLanguage } from "@/context/language-provider";
 import { StepIndicator } from "@/components/nav";
 import type { CompanySize, OnboardingData } from "@/types/assessment";
 import { cn } from "@/lib/utils";
 
 const INDUSTRIES = [
-  "Technology",
-  "Financial Services",
-  "Healthcare",
-  "Retail",
-  "Manufacturing",
-  "Professional Services",
-  "Other",
+  ["Technology", "technology"], ["Financial Services", "financialServices"], ["Healthcare", "healthcare"],
+  ["Retail", "retail"], ["Manufacturing", "manufacturing"], ["Professional Services", "professionalServices"], ["Other", "other"],
 ];
 
 const COMPANY_SIZES: { value: CompanySize; label: string }[] = [
@@ -32,25 +28,14 @@ const COMPANY_SIZES: { value: CompanySize; label: string }[] = [
 ];
 
 const DEPARTMENTS = [
-  "Customer Support",
-  "Sales",
-  "Operations",
-  "HR",
-  "Finance",
-  "IT",
-  "Marketing",
-  "Legal",
+  ["Customer Support", "customerSupport"], ["Sales", "sales"], ["Operations", "operations"], ["HR", "hr"],
+  ["Finance", "finance"], ["IT", "it"], ["Marketing", "marketing"], ["Legal", "legal"],
 ];
 
 const WORKFLOW_SUGGESTIONS = [
-  "Invoice processing",
-  "Customer ticket routing",
-  "Document review",
-  "Lead qualification",
-  "Employee onboarding",
-  "Report generation",
-  "Data entry",
-  "Compliance checks",
+  ["Invoice processing", "invoiceProcessing"], ["Customer ticket routing", "ticketRouting"], ["Document review", "documentReview"],
+  ["Lead qualification", "leadQualification"], ["Employee onboarding", "employeeOnboarding"], ["Report generation", "reportGeneration"],
+  ["Data entry", "dataEntry"], ["Compliance checks", "complianceChecks"],
 ];
 
 const stepSchemas = [
@@ -62,38 +47,16 @@ const stepSchemas = [
   z.object({ manualOperationsHours: z.number().min(1).max(168) }),
 ];
 
-const STEP_TITLES = [
-  "What industry is your company in?",
-  "How large is your organization?",
-  "Which departments should we focus on?",
-  "Describe your core business processes",
-  "What repetitive workflows slow your team down?",
-  "How much time goes into manual operations?",
-];
-
-const STEP_SUBTITLES = [
-  "This helps us tailor AI opportunities to your sector.",
-  "Company size affects implementation scope and ROI.",
-  "Select all departments where AI could create impact.",
-  "Tell us about the workflows that drive your business.",
-  "Pick common workflows or add your own.",
-  "Estimate weekly hours spent on manual, repetitive tasks.",
-];
+const STEP_TITLES = ["industryQuestion", "companySizeQuestion", "questionDepartments", "processesQuestion", "workflowsQuestion", "hoursQuestion"];
+const STEP_SUBTITLES = ["industryHelp", "companySizeHelp", "departmentsHelp", "processesHelp", "workflowsHelp", "hoursHelp"];
 
 export function OnboardingWizard() {
   const router = useRouter();
   const { onboarding, setOnboarding, completeOnboarding } = useAssessment();
+  const { t } = useLanguage();
   const [step, setStep] = useState(0);
   const [customWorkflow, setCustomWorkflow] = useState("");
   const totalSteps = stepSchemas.length + 1;
-
-  useEffect(() => {
-    const startStep = sessionStorage.getItem("adopt-ai-start-step");
-    sessionStorage.removeItem("adopt-ai-start-step");
-    if (startStep === "1" && onboarding.industry) {
-      setStep(1);
-    }
-  }, [onboarding.industry]);
 
   const data: Partial<OnboardingData> = {
     industry: onboarding.industry ?? "",
@@ -176,7 +139,7 @@ export function OnboardingWizard() {
         <StepIndicator
           current={step + 1}
           total={totalSteps}
-          label="Discovery"
+          label={t("discovery")}
         />
       </div>
 
@@ -195,24 +158,24 @@ export function OnboardingWizard() {
           </div>
           <h1 className="mb-5 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.055em] md:text-6xl">
             {step < STEP_TITLES.length
-              ? STEP_TITLES[step]
-              : "Ready to analyze your organization?"}
+              ? t(STEP_TITLES[step])
+              : t("readyQuestion")}
           </h1>
           <p className="mb-12 max-w-2xl text-lg leading-relaxed text-muted-foreground">
             {step < STEP_SUBTITLES.length
-              ? STEP_SUBTITLES[step]
-              : "Review your inputs and launch the AI opportunity analysis."}
+              ? t(STEP_SUBTITLES[step])
+              : t("reviewHelp")}
           </p>
 
           {step === 0 && (
             <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
-              {INDUSTRIES.map((ind) => (
+              {INDUSTRIES.map(([value, key]) => (
                 <OptionButton
-                  key={ind}
-                  selected={data.industry === ind}
-                  onClick={() => setOnboarding({ industry: ind })}
+                  key={value}
+                  selected={data.industry === value}
+                  onClick={() => setOnboarding({ industry: value })}
                 >
-                  {ind}
+                  {t(key)}
                 </OptionButton>
               ))}
             </div>
@@ -226,7 +189,7 @@ export function OnboardingWizard() {
                   selected={data.companySize === size.value}
                   onClick={() => setOnboarding({ companySize: size.value })}
                 >
-                  <span className="text-lg">{size.label} employees</span>
+                  <span className="text-lg">{size.label} {t("employees")}</span>
                 </OptionButton>
               ))}
             </div>
@@ -234,13 +197,13 @@ export function OnboardingWizard() {
 
           {step === 2 && (
             <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
-              {DEPARTMENTS.map((dept) => (
+              {DEPARTMENTS.map(([value, key]) => (
                 <OptionChip
-                  key={dept}
-                  selected={(data.departments ?? []).includes(dept)}
-                  onClick={() => toggleDepartment(dept)}
+                  key={value}
+                  selected={(data.departments ?? []).includes(value)}
+                  onClick={() => toggleDepartment(value)}
                 >
-                  {dept}
+                  {t(key)}
                 </OptionChip>
               ))}
             </div>
@@ -260,25 +223,25 @@ export function OnboardingWizard() {
           {step === 4 && (
             <div className="space-y-6">
               <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
-                {WORKFLOW_SUGGESTIONS.map((wf) => (
+                {WORKFLOW_SUGGESTIONS.map(([value, key]) => (
                   <OptionChip
-                    key={wf}
-                    selected={(data.repetitiveWorkflows ?? []).includes(wf)}
-                    onClick={() => toggleWorkflow(wf)}
+                    key={value}
+                    selected={(data.repetitiveWorkflows ?? []).includes(value)}
+                    onClick={() => toggleWorkflow(value)}
                   >
-                    {wf}
+                    {t(key)}
                   </OptionChip>
                 ))}
               </div>
               <div className="flex max-w-2xl gap-4">
                 <Input
-                  placeholder="Add custom workflow..."
+                  placeholder={t("addWorkflow")}
                   value={customWorkflow}
                   onChange={(e) => setCustomWorkflow(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addCustomWorkflow()}
                 />
                 <Button variant="secondary" onClick={addCustomWorkflow}>
-                  Add
+                  {t("add")}
                 </Button>
               </div>
             </div>
@@ -291,7 +254,7 @@ export function OnboardingWizard() {
                   {data.manualOperationsHours}
                 </span>
                 <span className="ml-2 text-xl text-muted-foreground">
-                  hours / week
+                  {t("hoursWeek")}
                 </span>
               </div>
               <input
@@ -307,27 +270,30 @@ export function OnboardingWizard() {
                 className="w-full accent-foreground"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Minimal</span>
-                <span>Significant manual load</span>
+                <span>{t("minimal")}</span>
+                <span>{t("significantLoad")}</span>
               </div>
             </div>
           )}
 
           {step === 6 && (
             <div className="max-w-2xl divide-y divide-border border-y border-border">
-              <ReviewRow label="Industry" value={data.industry} />
-              <ReviewRow label="Company size" value={data.companySize} />
+              <ReviewRow label={t("industry")} value={data.industry} fallback={t("notProvided")} />
+              <ReviewRow label={t("companySize")} value={data.companySize} fallback={t("notProvided")} />
               <ReviewRow
-                label="Departments"
+                label={t("departments")}
                 value={(data.departments ?? []).join(", ")}
+                fallback={t("notProvided")}
               />
               <ReviewRow
-                label="Workflows"
+                label={t("workflows")}
                 value={(data.repetitiveWorkflows ?? []).join(", ")}
+                fallback={t("notProvided")}
               />
               <ReviewRow
-                label="Manual hours/week"
+                label={t("manualHours")}
                 value={String(data.manualOperationsHours)}
+                fallback={t("notProvided")}
               />
             </div>
           )}
@@ -342,7 +308,7 @@ export function OnboardingWizard() {
           className={cn(step === 0 && "invisible")}
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          {t("back")}
         </Button>
         <Button
           variant="gradient"
@@ -352,18 +318,18 @@ export function OnboardingWizard() {
         >
           {step === totalSteps - 1 ? (
             <>
-              Launch Analysis
+              {t("launchAnalysis")}
               <ArrowRight className="h-4 w-4" />
             </>
           ) : (
             <>
-              Continue
+              {t("continue")}
               <ArrowRight className="h-4 w-4" />
             </>
           )}
         </Button>
         <span className="hidden text-xs text-muted-foreground sm:block">
-          Press Enter ↵
+          {t("pressEnter")}
         </span>
       </div>
     </div>
@@ -426,15 +392,17 @@ function OptionChip({
 function ReviewRow({
   label,
   value,
+  fallback,
 }: {
   label: string;
   value: string | undefined;
+  fallback: string;
 }) {
   return (
     <div className="grid gap-2 py-4 sm:grid-cols-[180px_1fr]">
       <span className="text-sm text-muted-foreground">{label}</span>
       <span className="text-sm font-medium text-right">
-        {value ?? "Not provided"}
+        {value || fallback}
       </span>
     </div>
   );

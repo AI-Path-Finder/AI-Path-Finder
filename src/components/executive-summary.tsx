@@ -3,28 +3,29 @@
 import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import type { Recommendation } from "@/types/assessment";
+import { useLanguage } from "@/context/language-provider";
 
 export function ExecutiveSummary({ recommendation }: { recommendation: Recommendation }) {
+  const { t } = useLanguage();
   const { opportunity, reasons } = recommendation;
   return (
     <motion.article initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-      <p className="eyebrow mb-7">Executive recommendation</p>
+      <p className="eyebrow mb-7">{t("executiveRecommendation")}</p>
       <h1 className="max-w-5xl text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">
-        Start with {opportunity.title}.
+        {t("startWith", { title: opportunity.title })}
       </h1>
       <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-        This initiative offers the strongest balance of measurable impact,
-        implementation feasibility, and manageable operational risk.
+        {t("recommendationText")}
       </p>
 
       <dl className="mt-16 grid gap-8 border-y border-border py-10 sm:grid-cols-3">
-        <Metric label="Projected annual savings" value={formatCurrency(opportunity.annualSavings)} />
-        <Metric label="Expected deployment" value={opportunity.deploymentTime} />
-        <Metric label="Recommendation confidence" value={`${opportunity.confidenceScore}%`} />
+        <Metric label={t("projectedSavings")} value={formatCurrency(opportunity.annualSavings)} />
+        <Metric label={t("expectedDeployment")} value={opportunity.deploymentTime} />
+        <Metric label={t("recommendationConfidence")} value={`${opportunity.confidenceScore}%`} />
       </dl>
 
       <section className="grid gap-10 border-b border-border py-14 md:grid-cols-[1fr_2fr]">
-        <h2 className="text-2xl font-semibold tracking-[-0.035em]">Why this should come first</h2>
+        <h2 className="text-2xl font-semibold tracking-[-0.035em]">{t("whyFirst")}</h2>
         <ol className="space-y-7">
           {reasons.map((reason, index) => (
             <li key={reason} className="grid grid-cols-[34px_1fr] gap-4 leading-relaxed">

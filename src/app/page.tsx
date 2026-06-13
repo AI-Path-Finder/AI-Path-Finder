@@ -9,6 +9,7 @@ import { Nav } from "@/components/nav";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/page-transition";
 import { useAssessment } from "@/context/assessment-provider";
+import { useLanguage } from "@/context/language-provider";
 
 const opportunities = [
   ["Customer support automation", "€42k annual savings"],
@@ -17,6 +18,7 @@ const opportunities = [
 ];
 
 export default function LandingPage() {
+  const { t } = useLanguage();
   return (
     <PageTransition>
       <div className="overflow-hidden rounded-b-[42px] bg-[#2f1c4d] text-white md:rounded-b-[72px]">
@@ -24,19 +26,18 @@ export default function LandingPage() {
         <section className="px-6 pb-20 pt-32 md:px-10 md:pb-28 md:pt-40">
           <div className="mx-auto grid max-w-[1440px] gap-16 lg:grid-cols-[1fr_.85fr] lg:items-center">
             <div>
-              <p className="mb-6 text-sm font-semibold text-[#d7c8ff]">AI transformation, with a plan</p>
+              <p className="mb-6 text-sm font-semibold text-[#d7c8ff]">{t("heroEyebrow")}</p>
               <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl text-[clamp(3.7rem,7vw,7.2rem)] font-semibold leading-[.92] tracking-[-.075em]">
-                Find the AI ideas worth building.
+                {t("heroTitle")}
               </motion.h1>
               <p className="mt-8 max-w-xl text-lg leading-relaxed text-white/68 md:text-xl">
-                Turn how your business works into a prioritized AI roadmap, with
-                clear opportunities and ROI before you invest.
+                {t("heroText")}
               </p>
               <div className="mt-9 flex flex-wrap items-center gap-4">
                 <Button size="lg" className="bg-white text-[#2f1c4d] hover:bg-[#f2ecff]" asChild>
-                  <Link href="/onboarding">Start assessment <ArrowRight /></Link>
+                  <Link href="/onboarding">{t("start")} <ArrowRight /></Link>
                 </Button>
-                <span className="text-sm text-white/55">Takes about 5 minutes</span>
+                <span className="text-sm text-white/55">{t("fiveMinutes")}</span>
               </div>
             </div>
             <AssessmentPreview />
@@ -48,19 +49,18 @@ export default function LandingPage() {
         <section id="platform" className="px-6 py-24 md:px-10 md:py-36">
           <div className="mx-auto max-w-[1440px]">
             <div className="mx-auto max-w-4xl text-center">
-              <p className="mb-5 text-sm font-semibold text-[#6b4eff]">ASK. ANALYZE. ACT.</p>
+              <p className="mb-5 text-sm font-semibold text-[#6b4eff]">{t("askAnalyzeAct")}</p>
               <h2 className="text-5xl font-semibold leading-[1] tracking-[-.065em] md:text-7xl">
-                From business context to a confident first move.
+                {t("contextTitle")}
               </h2>
               <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                AdoptAI asks the right questions, evaluates every opportunity,
-                and makes the business case easy to understand.
+                {t("contextText")}
               </p>
             </div>
             <div className="mt-20 grid gap-5 lg:grid-cols-3">
-              <ColorPanel graphic="discover" color="bg-[#e8ddff]" label="DISCOVER" title="Describe your company naturally" text="A conversational assessment learns how teams work, where time is lost, and what slows people down." />
-              <ColorPanel graphic="prioritize" color="bg-[#ffdd8d]" label="PRIORITIZE" title="Know what should happen first" text="Every initiative is scored for value, feasibility, speed, risk, and data readiness." />
-              <ColorPanel graphic="prove" color="bg-[#ff9d86]" label="PROVE" title="Make the financial case" text="Model savings, implementation cost, payback period, and twelve-month return." />
+              <ColorPanel graphic="discover" color="bg-[#e8ddff]" label={t("discover")} title={t("discoverTitle")} text={t("discoverText")} />
+              <ColorPanel graphic="prioritize" color="bg-[#ffdd8d]" label={t("prioritize")} title={t("prioritizeTitle")} text={t("prioritizeText")} />
+              <ColorPanel graphic="prove" color="bg-[#ff9d86]" label={t("prove")} title={t("proveTitle")} text={t("proveText")} />
             </div>
           </div>
         </section>
@@ -70,20 +70,19 @@ export default function LandingPage() {
             <div className="grid gap-16 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
               <div>
                 <p className="mb-5 text-sm font-semibold text-[#6b4eff]">INTELLIGENT DISCOVERY</p>
-                <h2 className="text-5xl font-semibold leading-[1] tracking-[-.06em] md:text-7xl">Questions that lead somewhere.</h2>
+                <h2 className="text-5xl font-semibold leading-[1] tracking-[-.06em] md:text-7xl">{t("questionsTitle")}</h2>
                 <p className="mt-7 max-w-lg text-lg leading-relaxed text-muted-foreground">
-                  One focused question at a time. Every answer shapes a more
-                  relevant set of recommendations for your organization.
+                  {t("questionsText")}
                 </p>
                 <Button className="mt-8 bg-[#6b4eff] text-white hover:bg-[#5438de]" asChild>
-                  <Link href="/onboarding">Try the assessment <ArrowRight /></Link>
+                  <Link href="/onboarding">{t("tryAssessment")} <ArrowRight /></Link>
                 </Button>
               </div>
               <div className="rounded-[32px] bg-white p-5 shadow-[0_24px_70px_rgba(47,28,77,.14)] md:p-9">
                 <div className="mb-12 flex items-center justify-between text-xs text-muted-foreground"><span>AdoptAI discovery</span><span>3 of 7</span></div>
                 <p className="mb-3 text-sm text-[#6b4eff]">03 →</p>
-                <h3 className="max-w-2xl text-3xl font-semibold tracking-[-.045em] md:text-5xl">Which departments should we focus on?</h3>
-                <p className="mt-4 text-muted-foreground">Select all areas where AI could create impact.</p>
+                <h3 className="max-w-2xl text-3xl font-semibold tracking-[-.045em] md:text-5xl">{t("questionDepartments")}</h3>
+                <p className="mt-4 text-muted-foreground">{t("selectAreas")}</p>
                 <div className="mt-10 grid gap-3 sm:grid-cols-2">
                   {["Customer Support", "Operations", "Finance", "Sales"].map((item, i) => <div key={item} className={`flex items-center gap-3 rounded-lg border-2 px-4 py-3 ${i < 2 ? "border-[#6b4eff] bg-[#f0edff]" : "border-border"}`}><span className="flex h-6 w-6 items-center justify-center rounded border border-current text-xs">{i < 2 ? <Check className="h-3 w-3" /> : i + 1}</span>{item}</div>)}
                 </div>
@@ -97,7 +96,7 @@ export default function LandingPage() {
             <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
               <div>
                 <p className="mb-5 text-sm font-semibold text-[#ff6c4c]">DECISION INTELLIGENCE</p>
-                <h2 className="text-5xl font-semibold leading-[1] tracking-[-.06em] md:text-7xl">Ideas become an actionable roadmap.</h2>
+                <h2 className="text-5xl font-semibold leading-[1] tracking-[-.06em] md:text-7xl">{t("roadmapTitle")}</h2>
               </div>
               <div className="divide-y divide-border border-y border-border">
                 {opportunities.map(([title, value], i) => (
@@ -114,8 +113,8 @@ export default function LandingPage() {
 
         <section className="px-4 pb-5 md:px-6">
           <div className="mx-auto max-w-[1480px] rounded-[40px] bg-[#ffdd8d] px-6 py-20 text-center md:rounded-[68px] md:px-16 md:py-28">
-            <h2 className="mx-auto max-w-4xl text-5xl font-semibold leading-[.98] tracking-[-.065em] md:text-8xl">Make your next AI investment the right one.</h2>
-            <Button size="lg" className="mt-9" asChild><Link href="/onboarding">Start assessment <MoveUpRight /></Link></Button>
+            <h2 className="mx-auto max-w-4xl text-5xl font-semibold leading-[.98] tracking-[-.065em] md:text-8xl">{t("finalCta")}</h2>
+            <Button size="lg" className="mt-9" asChild><Link href="/onboarding">{t("start")} <MoveUpRight /></Link></Button>
           </div>
         </section>
       </main>
@@ -127,12 +126,12 @@ export default function LandingPage() {
 function AssessmentPreview() {
   const router = useRouter();
   const { onboarding, setOnboarding } = useAssessment();
-  const industries = ["Technology", "Financial Services", "Healthcare"];
+  const { t } = useLanguage();
+  const industries = [["Technology", "technology"], ["Financial Services", "financialServices"], ["Healthcare", "healthcare"]];
   const [selected, setSelected] = useState(onboarding.industry ?? "Technology");
 
   const continueAssessment = () => {
     setOnboarding({ industry: selected });
-    sessionStorage.setItem("adopt-ai-start-step", "1");
     router.push("/onboarding");
   };
 
@@ -143,22 +142,22 @@ function AssessmentPreview() {
       <div className="relative rounded-[28px] bg-[#f8f5ff] p-6 text-[#2f1c4d] shadow-[0_28px_80px_rgba(0,0,0,.28)] md:p-9">
         <div className="mb-16 flex justify-between text-xs text-[#2f1c4d]/55"><span>AdoptAI</span><span>1 of 7</span></div>
         <p className="mb-3 text-sm text-[#6b4eff]">01 →</p>
-        <h2 className="text-3xl font-semibold leading-tight tracking-[-.05em] md:text-5xl">What industry is your company in?</h2>
-        <p className="mt-4 text-sm text-[#2f1c4d]/60">This helps tailor opportunities to your sector.</p>
+        <h2 className="text-3xl font-semibold leading-tight tracking-[-.05em] md:text-5xl">{t("industryQuestion")}</h2>
+        <p className="mt-4 text-sm text-[#2f1c4d]/60">{t("industryHelp")}</p>
         <div className="mt-8 space-y-2">
-          {industries.map((label, i) => (
+          {industries.map(([value, key], i) => (
             <button
               type="button"
-              key={label}
-              onClick={() => setSelected(label)}
-              className={`flex w-full items-center gap-3 rounded-lg border-2 px-4 py-3 text-left text-sm font-medium transition-colors ${selected === label ? "border-[#6b4eff] bg-[#e8ddff]" : "border-[#2f1c4d]/15 hover:border-[#6b4eff]/50"}`}
+              key={value}
+              onClick={() => setSelected(value)}
+              className={`flex w-full items-center gap-3 rounded-lg border-2 px-4 py-3 text-left text-sm font-medium transition-colors ${selected === value ? "border-[#6b4eff] bg-[#e8ddff]" : "border-[#2f1c4d]/15 hover:border-[#6b4eff]/50"}`}
             >
-              <span className="flex h-6 w-6 items-center justify-center rounded border border-current text-xs">{selected === label ? <Check className="h-3 w-3" /> : i + 1}</span>
-              {label}
+              <span className="flex h-6 w-6 items-center justify-center rounded border border-current text-xs">{selected === value ? <Check className="h-3 w-3" /> : i + 1}</span>
+              {t(key)}
             </button>
           ))}
         </div>
-        <Button onClick={continueAssessment} className="mt-7 bg-[#6b4eff] text-white hover:bg-[#5438de]">Continue <ArrowRight /></Button>
+        <Button onClick={continueAssessment} className="mt-7 bg-[#6b4eff] text-white hover:bg-[#5438de]">{t("continue")} <ArrowRight /></Button>
       </div>
     </motion.div>
   );

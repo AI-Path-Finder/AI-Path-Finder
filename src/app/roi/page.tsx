@@ -11,10 +11,12 @@ import { useAssessment } from "@/context/assessment-provider";
 import { defaultROIInputs } from "@/lib/roi";
 import { implementationCostForComplexity } from "@/lib/utils";
 import type { ROIInputs } from "@/types/assessment";
+import { useLanguage } from "@/context/language-provider";
 
 export default function ROIPage() {
   const router = useRouter();
   const { opportunities, roiInputs, setROIInputs, generateRecommendation, onboarding, getSelectedOpportunity } = useAssessment();
+  const { t } = useLanguage();
   const selected = getSelectedOpportunity() ?? opportunities[0];
   useEffect(() => { if (opportunities.length === 0) router.replace("/onboarding"); }, [opportunities.length, router]);
   const inputs: ROIInputs = useMemo(() => {
@@ -31,11 +33,11 @@ export default function ROIPage() {
       <main className="mx-auto max-w-6xl px-6 pb-24 pt-32">
         <header className="mb-12 rounded-[38px] bg-[#e8ddff] p-8 md:p-14">
           <p className="eyebrow mb-6">ROI simulation · {selected.title}</p>
-          <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">Understand the return before you invest.</h1>
-          <p className="mt-7 max-w-xl text-lg leading-relaxed text-foreground/65">Adjust the assumptions and see how the financial case changes in real time.</p>
+          <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">{t("roiTitle")}</h1>
+          <p className="mt-7 max-w-xl text-lg leading-relaxed text-foreground/65">{t("roiText")}</p>
         </header>
         <ROICalculator inputs={inputs} onChange={(partial) => setROIInputs({ ...inputs, ...partial })} />
-        <div className="mt-10 flex justify-end"><Button size="lg" onClick={handleContinue}>View recommendation <ArrowRight /></Button></div>
+        <div className="mt-10 flex justify-end"><Button size="lg" onClick={handleContinue}>{t("viewRecommendation")} <ArrowRight /></Button></div>
       </main>
     </PageTransition>
   );

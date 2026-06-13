@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import type { Opportunity } from "@/types/assessment";
+import { useLanguage } from "@/context/language-provider";
 
 export function OpportunityCard({
   opportunity,
@@ -13,6 +14,7 @@ export function OpportunityCard({
   index?: number;
   onClick?: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <motion.article
       initial={{ opacity: 0, y: 12 }}
@@ -31,7 +33,7 @@ export function OpportunityCard({
         {String(index + 1).padStart(2, "0")}
       </span>
       <div>
-        <p className="eyebrow mb-3">AI opportunity</p>
+        <p className="eyebrow mb-3">{t("aiOpportunity")}</p>
         <h2 className="text-3xl font-semibold leading-tight tracking-[-0.045em] md:text-4xl">
           {opportunity.title}
         </h2>
@@ -40,10 +42,10 @@ export function OpportunityCard({
         </p>
       </div>
       <dl className="grid grid-cols-2 gap-x-6 gap-y-6 text-sm">
-        <Metric label="Annual savings" value={formatCurrency(opportunity.annualSavings)} />
-        <Metric label="Complexity" value={opportunity.implementationComplexity} />
-        <Metric label="Deployment" value={opportunity.deploymentTime} />
-        <Metric label="Automation" value={`${opportunity.automationPercent}%`} />
+        <Metric label={t("annualSavings")} value={formatCurrency(opportunity.annualSavings)} />
+        <Metric label={t("complexity")} value={t(opportunity.implementationComplexity.toLowerCase())} />
+        <Metric label={t("deployment")} value={opportunity.deploymentTime} />
+        <Metric label={t("automation")} value={`${opportunity.automationPercent}%`} />
       </dl>
     </motion.article>
   );

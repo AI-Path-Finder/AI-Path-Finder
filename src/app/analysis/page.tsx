@@ -10,10 +10,12 @@ import { OpportunityCard } from "@/components/opportunity-card";
 import { PageTransition } from "@/components/page-transition";
 import { Button } from "@/components/ui/button";
 import { useAssessment } from "@/context/assessment-provider";
+import { useLanguage } from "@/context/language-provider";
 
 export default function AnalysisPage() {
   const router = useRouter();
   const { opportunities, onboarding } = useAssessment();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [showResults, setShowResults] = useState(false);
 
@@ -25,7 +27,7 @@ export default function AnalysisPage() {
 
   return (
     <PageTransition>
-      <Nav ctaHref="/prioritize" ctaLabel="Prioritize" showCta={showResults} />
+      <Nav ctaHref="/prioritize" ctaLabel={t("prioritize")} showCta={showResults} />
       {loading && !showResults ? (
         <AnalysisLoader onComplete={() => { setLoading(false); setShowResults(true); }} />
       ) : (
@@ -35,7 +37,7 @@ export default function AnalysisPage() {
               Analysis complete · {opportunities.length} opportunities identified
             </p>
             <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">
-              Where AI can create meaningful value.
+              {t("analysisTitle")}
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-white/65">
               Based on your {onboarding.industry} profile across{" "}
@@ -49,7 +51,7 @@ export default function AnalysisPage() {
           </div>
           <div className="flex justify-end">
             <Button size="lg" asChild>
-              <Link href="/prioritize">Prioritize opportunities <ArrowRight /></Link>
+              <Link href="/prioritize">{t("prioritizeOpportunities")} <ArrowRight /></Link>
             </Button>
           </div>
         </main>

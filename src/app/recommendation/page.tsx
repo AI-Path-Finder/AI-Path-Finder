@@ -9,10 +9,12 @@ import { PageTransition } from "@/components/page-transition";
 import { Button } from "@/components/ui/button";
 import { useAssessment } from "@/context/assessment-provider";
 import { saveAssessment } from "@/lib/supabase";
+import { useLanguage } from "@/context/language-provider";
 
 export default function RecommendationPage() {
   const router = useRouter();
   const { recommendation, opportunities, onboarding, resetAssessment } = useAssessment();
+  const { t } = useLanguage();
   useEffect(() => { if (!recommendation && opportunities.length === 0) router.replace("/onboarding"); }, [recommendation, opportunities.length, router]);
   useEffect(() => { if (recommendation) saveAssessment({ onboarding, opportunities, topRecommendationId: recommendation.opportunity.id }); }, [recommendation, opportunities, onboarding]);
   if (!recommendation) return null;
@@ -24,8 +26,8 @@ export default function RecommendationPage() {
           <ExecutiveSummary recommendation={recommendation} />
         </div>
         <div className="mt-10 flex flex-wrap gap-3">
-          <Button asChild><Link href="/prioritize">Review all opportunities</Link></Button>
-          <Button variant="outline" onClick={() => { resetAssessment(); router.push("/onboarding"); }}>Start new assessment</Button>
+          <Button asChild><Link href="/prioritize">{t("reviewAll")}</Link></Button>
+          <Button variant="outline" onClick={() => { resetAssessment(); router.push("/onboarding"); }}>{t("startNew")}</Button>
         </div>
       </main>
     </PageTransition>
