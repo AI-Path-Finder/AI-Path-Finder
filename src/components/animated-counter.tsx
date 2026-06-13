@@ -18,9 +18,9 @@ export function AnimatedCounter({
   className,
 }: AnimatedCounterProps) {
   const [display, setDisplay] = useState(value);
-  const frameRef = useRef<number>();
+  const frameRef = useRef<number | undefined>(undefined);
   const startRef = useRef(display);
-  const startTimeRef = useRef<number>();
+  const startTimeRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     startRef.current = display;

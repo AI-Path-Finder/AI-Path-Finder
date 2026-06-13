@@ -32,19 +32,7 @@ jobs:
         run: npm install
 
       - name: Build static site
-        id: build
-        continue-on-error: true
-        run: |
-          set -o pipefail
-          npm run build 2>&1 | tee build.log
-
-      - name: Report build failure
-        if: steps.build.outcome == 'failure'
-        run: |
-          tail -n 8 build.log | while IFS= read -r line; do
-            echo "::error::$line"
-          done
-          exit 1
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
