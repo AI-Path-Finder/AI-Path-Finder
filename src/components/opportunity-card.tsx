@@ -14,7 +14,7 @@ export function OpportunityCard({
   index?: number;
   onClick?: () => void;
 }) {
-  const { t } = useLanguage();
+  const { t, td } = useLanguage();
   return (
     <motion.article
       initial={{ opacity: 0, y: 12 }}
@@ -35,16 +35,16 @@ export function OpportunityCard({
       <div>
         <p className="eyebrow mb-3">{t("aiOpportunity")}</p>
         <h2 className="text-3xl font-semibold leading-tight tracking-[-0.045em] md:text-4xl">
-          {opportunity.title}
+          {td(opportunity.title)}
         </h2>
         <p className="mt-4 max-w-xl leading-relaxed text-muted-foreground">
-          {opportunity.description}
+          {td(opportunity.description)}
         </p>
       </div>
       <dl className="grid grid-cols-2 gap-x-6 gap-y-6 text-sm">
         <Metric label={t("annualSavings")} value={formatCurrency(opportunity.annualSavings)} />
         <Metric label={t("complexity")} value={t(opportunity.implementationComplexity.toLowerCase())} />
-        <Metric label={t("deployment")} value={opportunity.deploymentTime} />
+        <Metric label={t("deployment")} value={td(opportunity.deploymentTime)} />
         <Metric label={t("automation")} value={`${opportunity.automationPercent}%`} />
       </dl>
     </motion.article>

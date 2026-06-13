@@ -6,13 +6,13 @@ import type { Recommendation } from "@/types/assessment";
 import { useLanguage } from "@/context/language-provider";
 
 export function ExecutiveSummary({ recommendation }: { recommendation: Recommendation }) {
-  const { t } = useLanguage();
+  const { t, td } = useLanguage();
   const { opportunity, reasons } = recommendation;
   return (
     <motion.article initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <p className="eyebrow mb-7">{t("executiveRecommendation")}</p>
       <h1 className="max-w-5xl text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">
-        {t("startWith", { title: opportunity.title })}
+        {t("startWith", { title: td(opportunity.title) })}
       </h1>
       <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
         {t("recommendationText")}
@@ -20,7 +20,7 @@ export function ExecutiveSummary({ recommendation }: { recommendation: Recommend
 
       <dl className="mt-16 grid gap-8 border-y border-border py-10 sm:grid-cols-3">
         <Metric label={t("projectedSavings")} value={formatCurrency(opportunity.annualSavings)} />
-        <Metric label={t("expectedDeployment")} value={opportunity.deploymentTime} />
+        <Metric label={t("expectedDeployment")} value={td(opportunity.deploymentTime)} />
         <Metric label={t("recommendationConfidence")} value={`${opportunity.confidenceScore}%`} />
       </dl>
 
@@ -30,7 +30,7 @@ export function ExecutiveSummary({ recommendation }: { recommendation: Recommend
           {reasons.map((reason, index) => (
             <li key={reason} className="grid grid-cols-[34px_1fr] gap-4 leading-relaxed">
               <span className="text-sm text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
-              <span>{reason}</span>
+              <span>{td(reason)}</span>
             </li>
           ))}
         </ol>

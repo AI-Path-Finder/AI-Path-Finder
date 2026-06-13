@@ -53,7 +53,7 @@ const STEP_SUBTITLES = ["industryHelp", "companySizeHelp", "departmentsHelp", "p
 export function OnboardingWizard() {
   const router = useRouter();
   const { onboarding, setOnboarding, completeOnboarding } = useAssessment();
-  const { t } = useLanguage();
+  const { t, td } = useLanguage();
   const [step, setStep] = useState(0);
   const [customWorkflow, setCustomWorkflow] = useState("");
   const totalSteps = stepSchemas.length + 1;
@@ -211,7 +211,7 @@ export function OnboardingWizard() {
 
           {step === 3 && (
             <Textarea
-              placeholder="e.g. We process 500+ customer support tickets daily, manually route invoices through three approval stages, and generate weekly reports from multiple data sources..."
+              placeholder={t("workflowPlaceholder")}
               value={data.businessProcesses}
               onChange={(e) =>
                 setOnboarding({ businessProcesses: e.target.value })
@@ -278,16 +278,16 @@ export function OnboardingWizard() {
 
           {step === 6 && (
             <div className="max-w-2xl divide-y divide-border border-y border-border">
-              <ReviewRow label={t("industry")} value={data.industry} fallback={t("notProvided")} />
+              <ReviewRow label={t("industry")} value={td(data.industry ?? "")} fallback={t("notProvided")} />
               <ReviewRow label={t("companySize")} value={data.companySize} fallback={t("notProvided")} />
               <ReviewRow
                 label={t("departments")}
-                value={(data.departments ?? []).join(", ")}
+                value={(data.departments ?? []).map(td).join(", ")}
                 fallback={t("notProvided")}
               />
               <ReviewRow
                 label={t("workflows")}
-                value={(data.repetitiveWorkflows ?? []).join(", ")}
+                value={(data.repetitiveWorkflows ?? []).map(td).join(", ")}
                 fallback={t("notProvided")}
               />
               <ReviewRow

@@ -15,7 +15,7 @@ import { useLanguage } from "@/context/language-provider";
 export default function AnalysisPage() {
   const router = useRouter();
   const { opportunities, onboarding } = useAssessment();
-  const { t } = useLanguage();
+  const { t, td } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [showResults, setShowResults] = useState(false);
 
@@ -34,14 +34,13 @@ export default function AnalysisPage() {
         <main className="mx-auto max-w-6xl px-6 pb-24 pt-32">
           <header className="mb-12 rounded-[38px] bg-[#2f1c4d] p-8 text-white md:p-14">
             <p className="eyebrow mb-6 text-white/60">
-              Analysis complete · {opportunities.length} opportunities identified
+              {t("analysisComplete")} · {opportunities.length} {t("opportunitiesIdentified")}
             </p>
             <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">
               {t("analysisTitle")}
             </h1>
             <p className="mt-8 max-w-2xl text-lg leading-relaxed text-white/65">
-              Based on your {onboarding.industry} profile across{" "}
-              {(onboarding.departments ?? []).join(", ")}.
+              {t("basedOn", { industry: td(onboarding.industry ?? ""), departments: (onboarding.departments ?? []).map(td).join(", ") })}
             </p>
           </header>
           <div className="mb-16">

@@ -14,12 +14,13 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import type { Opportunity } from "@/types/assessment";
 import Link from "next/link";
+import { useLanguage } from "@/context/language-provider";
 
 const QUADRANT_LABELS = {
-  "quick-wins": { label: "Quick Wins", color: "text-foreground", bg: "bg-secondary" },
-  strategic: { label: "Strategic Projects", color: "text-foreground", bg: "bg-secondary" },
-  secondary: { label: "Secondary", color: "text-muted-foreground", bg: "bg-secondary" },
-  avoid: { label: "Avoid", color: "text-muted-foreground", bg: "bg-secondary" },
+  "quick-wins": { key: "quickWins", bg: "bg-secondary" },
+  strategic: { key: "strategicProjects", bg: "bg-secondary" },
+  secondary: { key: "secondary", bg: "bg-secondary" },
+  avoid: { key: "avoid", bg: "bg-secondary" },
 };
 
 interface PriorityMatrixProps {
@@ -27,6 +28,7 @@ interface PriorityMatrixProps {
 }
 
 export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
+  const { t, td } = useLanguage();
   const [selected, setSelected] = useState<Opportunity | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
@@ -141,7 +143,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
             textAnchor="middle"
             className="fill-muted-foreground text-[11px]"
           >
-            Implementation Difficulty →
+            {t("implementationDifficulty")} →
           </text>
           <text
             x={14}
@@ -150,21 +152,21 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
             transform={`rotate(-90, 14, ${padding + plotH / 2})`}
             className="fill-muted-foreground text-[11px]"
           >
-            Business Value →
+            {t("businessValue")} →
           </text>
 
           {/* Quadrant labels */}
           <text x={padding + 12} y={padding + 20} className="fill-foreground text-[10px] font-medium">
-            Quick Wins
+            {t("quickWins")}
           </text>
           <text x={padding + plotW / 2 + 12} y={padding + 20} className="fill-foreground text-[10px] font-medium">
-            Strategic
+            {t("strategic")}
           </text>
           <text x={padding + 12} y={padding + plotH / 2 + 20} className="fill-muted-foreground text-[10px] font-medium">
-            Secondary
+            {t("secondary")}
           </text>
           <text x={padding + plotW / 2 + 12} y={padding + plotH / 2 + 20} className="fill-muted-foreground text-[10px] font-medium">
-            Avoid
+            {t("avoid")}
           </text>
 
           {/* Data points */}
@@ -172,8 +174,6 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
             const cx = toX(opp.difficultyScore);
             const cy = toY(opp.valueScore);
             const isHovered = hoveredId === opp.id;
-            const q = QUADRANT_LABELS[opp.quadrant];
-
             return (
               <g
                 key={opp.id}
@@ -218,9 +218,9 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                       textAnchor="middle"
                       className="fill-foreground text-[10px] font-medium"
                     >
-                      {opp.title.length > 22
-                        ? opp.title.slice(0, 22) + "…"
-                        : opp.title}
+                      {td(opp.title).length > 22
+                        ? td(opp.title).slice(0, 22) + "…"
+                        : td(opp.title)}
                     </text>
                     <text
                       x={cx}
@@ -228,7 +228,7 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
                       textAnchor="middle"
                       className="fill-muted-foreground text-[10px]"
                     >
-                      {formatCurrency(opp.annualSavings)}/yr
+                      {formatCurrency(opp.annualSavings)}{t("perYear")}
                     </text>
                   </g>
                 )}
@@ -250,32 +250,32 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
           {selected && (
             <>
               <DialogHeader>
-                <DialogTitle>{selected.title}</DialogTitle>
-                <DialogDescription>{selected.description}</DialogDescription>
+                <DialogTitle>{td(selected.title)}</DialogTitle>
+                <DialogDescription>{td(selected.description)}</DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
                   <Badge className={QUADRANT_LABELS[selected.quadrant].bg}>
-                    {QUADRANT_LABELS[selected.quadrant].label}
+                    {t(QUADRANT_LABELS[selected.quadrant].key)}
                   </Badge>
                   <Badge variant="secondary">
-                    {selected.implementationComplexity} complexity
+                    {t(selected.implementationComplexity.toLowerCase())} {t("complexity").toLowerCase()}
                   </Badge>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-muted-foreground">Annual savings</p>
+                    <p className="text-muted-foreground">{t("annualSavings")}</p>
                     <p className="text-lg font-semibold">
                       {formatCurrency(selected.annualSavings)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-muted-foreground">Confidence</p>
+                    <p className="text-muted-foreground">{t("confidence")}</p>
                     <p className="font-mono text-lg">{selected.confidenceScore}%</p>
                   </div>
                 </div>
                 <Button className="w-full" asChild>
-                  <Link href="/roi">Simulate ROI</Link>
+                  <Link href="/roi">{t("simulateRoi")}</Link>
                 </Button>
               </div>
             </>

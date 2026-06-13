@@ -15,6 +15,7 @@ import { AnimatedCounter } from "@/components/animated-counter";
 import { calculateROI } from "@/lib/roi";
 import { formatCurrency } from "@/lib/utils";
 import type { ROIInputs } from "@/types/assessment";
+import { useLanguage } from "@/context/language-provider";
 
 export function ROICalculator({
   inputs,
@@ -23,39 +24,40 @@ export function ROICalculator({
   inputs: ROIInputs;
   onChange: (inputs: Partial<ROIInputs>) => void;
 }) {
+  const { t } = useLanguage();
   const results = useMemo(() => calculateROI(inputs), [inputs]);
 
   return (
     <div>
       <section className="grid gap-12 border-y border-border py-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
         <div>
-          <p className="eyebrow mb-8">Assumptions</p>
+          <p className="eyebrow mb-8">{t("assumptions")}</p>
           <div className="space-y-8">
-            <InputField label="Employee count" value={inputs.employeeCount} min={1} max={5000} onChange={(v) => onChange({ employeeCount: v })} />
-            <InputField label="Average salary" value={inputs.averageSalary} min={30000} max={250000} step={5000} prefix="$" onChange={(v) => onChange({ averageSalary: v })} />
-            <SliderField label="Manual hours per week" value={inputs.manualHoursPerWeek} min={1} max={40} suffix=" hrs" onChange={(v) => onChange({ manualHoursPerWeek: v })} />
-            <SliderField label="Expected automation" value={inputs.automationPercent} min={10} max={95} suffix="%" onChange={(v) => onChange({ automationPercent: v })} />
-            <InputField label="Implementation cost" value={inputs.implementationCost} min={50000} max={500000} step={10000} prefix="$" onChange={(v) => onChange({ implementationCost: v })} />
+            <InputField label={t("employeeCount")} value={inputs.employeeCount} min={1} max={5000} onChange={(v) => onChange({ employeeCount: v })} />
+            <InputField label={t("averageSalary")} value={inputs.averageSalary} min={30000} max={250000} step={5000} prefix="$" onChange={(v) => onChange({ averageSalary: v })} />
+            <SliderField label={t("manualHoursWeek")} value={inputs.manualHoursPerWeek} min={1} max={40} suffix={t("hoursShort")} onChange={(v) => onChange({ manualHoursPerWeek: v })} />
+            <SliderField label={t("expectedAutomation")} value={inputs.automationPercent} min={10} max={95} suffix="%" onChange={(v) => onChange({ automationPercent: v })} />
+            <InputField label={t("implementationCost")} value={inputs.implementationCost} min={50000} max={500000} step={10000} prefix="$" onChange={(v) => onChange({ implementationCost: v })} />
           </div>
         </div>
 
         <div>
-          <p className="eyebrow mb-8">Projected return</p>
+          <p className="eyebrow mb-8">{t("projectedReturn")}</p>
           <div className="grid grid-cols-2 gap-x-8 gap-y-10 border-b border-border pb-10">
-            <Result label="Annual savings"><AnimatedCounter value={results.annualSavings} prefix="$" /></Result>
-            <Result label="Implementation"><AnimatedCounter value={results.implementationCost} prefix="$" /></Result>
-            <Result label="Payback period"><AnimatedCounter value={results.paybackMonths} decimals={1} suffix=" months" /></Result>
-            <Result label="12-month ROI"><AnimatedCounter value={results.roi12Month} suffix="%" /></Result>
+            <Result label={t("annualSavings")}><AnimatedCounter value={results.annualSavings} prefix="$" /></Result>
+            <Result label={t("implementation")}><AnimatedCounter value={results.implementationCost} prefix="$" /></Result>
+            <Result label={t("paybackPeriod")}><AnimatedCounter value={results.paybackMonths} decimals={1} suffix={t("months")} /></Result>
+            <Result label={t("roi12")}><AnimatedCounter value={results.roi12Month} suffix="%" /></Result>
           </div>
-          <p className="mb-5 mt-10 text-xs text-muted-foreground">Cumulative value over 24 months</p>
+          <p className="mb-5 mt-10 text-xs text-muted-foreground">{t("cumulativeValue")}</p>
           <div className="h-[280px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={results.monthlyData}>
                 <XAxis dataKey="month" tick={{ fill: "#746e67", fontSize: 11 }} axisLine={false} tickLine={false} interval={3} />
                 <YAxis tick={{ fill: "#746e67", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
                 <Tooltip contentStyle={{ background: "#f7f3eb", border: "1px solid #d7d0c7", borderRadius: "2px" }} formatter={(value: number) => [formatCurrency(value), ""]} />
-                <Area type="monotone" dataKey="savings" stroke="#a7a097" strokeWidth={1.5} fill="transparent" name="Cumulative savings" />
-                <Area type="monotone" dataKey="net" stroke="#1d1a17" strokeWidth={2} fill="rgba(29,26,23,.05)" name="Net value" />
+                <Area type="monotone" dataKey="savings" stroke="#a7a097" strokeWidth={1.5} fill="transparent" name={t("cumulativeSavings")} />
+                <Area type="monotone" dataKey="net" stroke="#1d1a17" strokeWidth={2} fill="rgba(29,26,23,.05)" name={t("netValue")} />
               </AreaChart>
             </ResponsiveContainer>
           </div>

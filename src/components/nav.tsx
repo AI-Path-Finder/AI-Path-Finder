@@ -80,13 +80,12 @@ export function StepIndicator({
   total: number;
   label?: string;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="flex items-center gap-2 text-xs text-muted-foreground">
       <span>{label}</span>
       <span aria-hidden="true">·</span>
-      <span>
-        {current} of {total}
-      </span>
+      <span>{t("stepOf", { current, total })}</span>
     </div>
   );
 }
