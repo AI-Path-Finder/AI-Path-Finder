@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import type { Opportunity } from "@/types/assessment";
 import { useLanguage } from "@/context/language-provider";
+import { OpportunityGraphic } from "@/components/opportunity-graphic";
 
 export function OpportunityCard({
   opportunity,
@@ -32,7 +33,7 @@ export function OpportunityCard({
       <span className="text-sm text-muted-foreground">
         {String(index + 1).padStart(2, "0")}
       </span>
-      <OpportunityGraphic opportunity={opportunity} />
+      <OpportunityGraphic opportunityId={opportunity.id} />
       <div>
         <p className="eyebrow mb-3">{t("aiOpportunity")}</p>
         <h2 className="text-3xl font-semibold leading-tight tracking-[-0.045em] md:text-4xl">
@@ -49,27 +50,6 @@ export function OpportunityCard({
         <Metric label={t("automation")} value={`${opportunity.automationPercent}%`} />
       </dl>
     </motion.article>
-  );
-}
-
-function OpportunityGraphic({ opportunity }: { opportunity: Opportunity }) {
-  const bars = [
-    { value: opportunity.automationPercent, color: "bg-[#6b4eff]" },
-    { value: opportunity.confidenceScore, color: "bg-[#ff8a6c]" },
-    { value: opportunity.dataAvailability, color: "bg-[#2f1c4d]" },
-  ];
-  return (
-    <div className="flex h-36 items-end gap-2 rounded-2xl bg-white/55 p-4" aria-hidden="true">
-      {bars.map((bar, index) => (
-        <div key={index} className="flex h-full flex-1 items-end rounded-full bg-white/80 p-1">
-          <motion.div
-            initial={{ height: 0 }}
-            animate={{ height: `${bar.value}%` }}
-            className={`w-full rounded-full ${bar.color}`}
-          />
-        </div>
-      ))}
-    </div>
   );
 }
 

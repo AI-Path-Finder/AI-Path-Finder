@@ -10,11 +10,12 @@ import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/page-transition";
 import { useAssessment } from "@/context/assessment-provider";
 import { useLanguage } from "@/context/language-provider";
+import { OpportunityGraphic } from "@/components/opportunity-graphic";
 
 const opportunities = [
-  ["Customer support automation", "€42k annual savings"],
-  ["Internal knowledge assistant", "6 week deployment"],
-  ["Invoice processing", "87 priority score"],
+  ["customer-support", "Customer support automation", "€42k annual savings"],
+  ["knowledge-assistant", "Internal knowledge assistant", "6 week deployment"],
+  ["document-processing", "Invoice processing", "87 priority score"],
 ];
 
 export default function LandingPage() {
@@ -99,9 +100,10 @@ export default function LandingPage() {
                 <h2 className="text-5xl font-semibold leading-[1] tracking-[-.06em] md:text-7xl">{t("roadmapTitle")}</h2>
               </div>
               <div className="divide-y divide-border border-y border-border">
-                {opportunities.map(([title, value], i) => (
-                  <div key={title} className="grid grid-cols-[42px_1fr_auto] items-center gap-4 py-7">
+                {opportunities.map(([id, title, value], i) => (
+                  <div key={title} className="grid grid-cols-[42px_96px_1fr_auto] items-center gap-4 py-6">
                     <span className="text-sm text-muted-foreground">0{i + 1}</span>
+                    <OpportunityGraphic opportunityId={id} compact />
                     <span className="text-xl font-semibold tracking-[-.025em]">{td(title)}</span>
                     <span className="hidden text-sm text-muted-foreground sm:block">{td(value)}</span>
                   </div>

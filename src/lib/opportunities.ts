@@ -1,5 +1,6 @@
 import type { OnboardingData, Opportunity, ROIResults } from "@/types/assessment";
 import { complexityToScore } from "@/lib/utils";
+import { estimateOpportunityAnnualSavings } from "@/lib/roi";
 
 const DEPARTMENT_OPPORTUNITIES: Record<
   string,
@@ -165,40 +166,6 @@ const BASE_OPPORTUNITIES: Partial<Opportunity>[] = [
   },
 ];
 
-function sizeMultiplier(size: string): number {
-  switch (size) {
-    case "1-50":
-      return 0.4;
-    case "51-200":
-      return 0.7;
-    case "201-1000":
-      return 1.0;
-    case "1000+":
-      return 1.8;
-    default:
-      return 1.0;
-  }
-}
-
-function calculateSavings(
-  data: OnboardingData,
-  automationPercent: number
-): number {
-  const hourlyRate = 75000 / 2080;
-  const affectedEmployees =
-    data.companySize === "1-50"
-      ? 8
-      : data.companySize === "51-200"
-        ? 25
-        : data.companySize === "201-1000"
-          ? 80
-          : 200;
-  const hoursPerWeek = data.manualOperationsHours || 20;
-  const hoursSaved =
-    affectedEmployees * hoursPerWeek * 52 * (automationPercent / 100);
-  return Math.round(hoursSaved * hourlyRate * sizeMultiplier(data.companySize));
-}
-
 function assignQuadrant(
   difficultyScore: number,
   valueScore: number
@@ -211,12 +178,19 @@ function assignQuadrant(
 
 function buildOpportunity(
   partial: Partial<Opportunity>,
-  data: OnboardingData,
-  boost: number
+  data: OnboardingData
 ): Opportunity {
   const complexity = partial.implementationComplexity ?? "Medium";
   const automationPercent = partial.automationPercent ?? 50;
-  const annualSavings = calculateSavings(data, automationPercent) + boost;
+  const annualSavings = estimateOpportunityAnnualSavings(
+    {
+      automationPercent,
+      implementationComplexity: complexity,
+      dataAvailability: partial.dataAvailability ?? 80,
+      confidenceScore: partial.confidenceScore ?? 80,
+    },
+    data
+  );
   const baseDifficulty = complexityToScore(complexity);
   const riskAdjustment = partial.complianceRisk === "High" ? 1.4 : partial.complianceRisk === "Medium" ? 0.7 : 0;
   const dataAdjustment = (100 - (partial.dataAvailability ?? 80)) / 35;
@@ -266,13 +240,8 @@ export function generateOpportunities(data: OnboardingData): Opportunity[] {
     }
   }
 
-  const workflowBoost = data.repetitiveWorkflows.length * 15000;
-  const processBoost = Math.min(data.businessProcesses.length * 100, 50000);
-
   return partials
-    .map((p, i) =>
-      buildOpportunity(p, data, workflowBoost + processBoost - i * 5000)
-    )
+    .map((partial) => buildOpportunity(partial, data))
     .sort((a, b) => b.annualSavings - a.annualSavings)
     ;
 }

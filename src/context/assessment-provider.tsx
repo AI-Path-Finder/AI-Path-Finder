@@ -21,8 +21,7 @@ import {
   generateOpportunities,
   getTopRecommendation,
 } from "@/lib/opportunities";
-import { calculateROI, defaultROIInputs } from "@/lib/roi";
-import { implementationCostForComplexity } from "@/lib/utils";
+import { calculateROI, estimateOpportunityAnnualSavings, opportunityROIInputs } from "@/lib/roi";
 
 const STORAGE_KEY = "adopt-ai-assessment";
 const LEGACY_STORAGE_KEY = "orion-ai-assessment";
@@ -44,14 +43,19 @@ function normalizeStoredState(value: unknown): AssessmentState {
     "softwareCost" in roiInputs
       ? roiInputs
       : {};
-  return {
-    onboarding:
+  const onboarding =
       stored.onboarding && typeof stored.onboarding === "object"
         ? stored.onboarding
-        : {},
-    opportunities: Array.isArray(stored.opportunities)
-      ? stored.opportunities
-      : [],
+        : {};
+  const opportunities = Array.isArray(stored.opportunities)
+    ? stored.opportunities.map((opportunity) => ({
+        ...opportunity,
+        annualSavings: estimateOpportunityAnnualSavings(opportunity, onboarding),
+      }))
+    : [];
+  return {
+    onboarding,
+    opportunities,
     selectedOpportunityId:
       typeof stored.selectedOpportunityId === "string"
         ? stored.selectedOpportunityId
@@ -154,20 +158,7 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
         roiInputs:
           Object.keys(financialInputs).length > 0
             ? financialInputs
-            : defaultROIInputs(
-                prev.onboarding.companySize === "1000+"
-                  ? 200
-                  : prev.onboarding.companySize === "201-1000"
-                    ? 80
-                    : prev.onboarding.companySize === "51-200"
-                      ? 25
-                      : 10,
-                top.automationPercent,
-                implementationCostForComplexity(
-                  top.implementationComplexity,
-                  prev.onboarding.companySize ?? "51-200"
-                )
-              ),
+            : opportunityROIInputs(top, prev.onboarding),
       };
     });
   }, []);

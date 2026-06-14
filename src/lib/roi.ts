@@ -1,4 +1,5 @@
-import type { ROIInputs, ROIResults, ROIScenario } from "@/types/assessment";
+import type { OnboardingData, Opportunity, ROIInputs, ROIResults, ROIScenario } from "@/types/assessment";
+import { implementationCostForComplexity } from "@/lib/utils";
 
 const SCENARIO_FACTORS: Record<ROIScenario, number> = {
   conservative: 0.72,
@@ -144,4 +145,45 @@ export function defaultROIInputs(
     currency: "EUR",
     scenario: "base",
   };
+}
+
+export function opportunityROIInputs(
+  opportunity: Pick<Opportunity, "automationPercent" | "implementationComplexity" | "dataAvailability" | "confidenceScore">,
+  onboarding: Partial<OnboardingData>
+): ROIInputs {
+  const employeeCount =
+    onboarding.companySize === "1000+"
+      ? 200
+      : onboarding.companySize === "201-1000"
+        ? 80
+        : onboarding.companySize === "51-200"
+          ? 25
+          : 10;
+  const inputs = defaultROIInputs(
+    employeeCount,
+    opportunity.automationPercent,
+    implementationCostForComplexity(
+      opportunity.implementationComplexity,
+      onboarding.companySize ?? "51-200"
+    )
+  );
+  inputs.dataQuality = opportunity.dataAvailability;
+  inputs.processMaturity = opportunity.confidenceScore;
+  inputs.adoptionReadiness =
+    opportunity.implementationComplexity === "Low"
+      ? 82
+      : opportunity.implementationComplexity === "High"
+        ? 52
+        : 68;
+  inputs.infrastructureReadiness = Math.round(
+    (inputs.dataQuality + inputs.processMaturity) / 2
+  );
+  return inputs;
+}
+
+export function estimateOpportunityAnnualSavings(
+  opportunity: Pick<Opportunity, "automationPercent" | "implementationComplexity" | "dataAvailability" | "confidenceScore">,
+  onboarding: Partial<OnboardingData>
+): number {
+  return calculateROI(opportunityROIInputs(opportunity, onboarding)).annualSavings;
 }
