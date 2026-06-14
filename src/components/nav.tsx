@@ -23,22 +23,22 @@ export function Nav({
   const [open, setOpen] = useState(false);
   return (
     <header className={`absolute top-0 z-50 w-full ${inverted ? "text-white" : ""}`}>
-      <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-6 md:px-10">
-        <Link href="/" className="text-base font-bold tracking-[-0.03em]">
+      <div className="flex h-24 w-full items-center justify-between px-5 md:px-7">
+        <Link href="/" className="text-xl font-bold tracking-[-0.04em]">
           AdoptAI
         </Link>
-        <nav className="hidden items-center gap-8 text-sm md:flex">
+        <nav className="hidden items-center gap-10 text-base md:flex">
           <Link href="/#platform" className={inverted ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"}>{t("platform")}</Link>
           <Link href="/#how-it-works" className={inverted ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"}>{t("how")}</Link>
           <Link href="/#outcomes" className={inverted ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"}>{t("outcomes")}</Link>
         </nav>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <div className="relative">
             <button
               type="button"
               aria-label="Select language"
               onClick={() => setOpen((value) => !value)}
-              className={`flex h-9 items-center gap-1.5 rounded-[3px] px-2.5 text-xs font-semibold transition-colors ${inverted ? "bg-white/10 text-white hover:bg-white/20" : "bg-secondary hover:bg-secondary/70"}`}
+              className={`flex h-11 items-center gap-2 rounded-[3px] px-3.5 text-sm font-semibold transition-colors ${inverted ? "bg-white/10 text-white hover:bg-white/20" : "bg-secondary hover:bg-secondary/70"}`}
             >
               <Languages className="h-3.5 w-3.5" />
               {language.toUpperCase()}
@@ -61,7 +61,7 @@ export function Nav({
             )}
           </div>
           {showCta && (
-            <Button size="sm" variant={inverted ? "secondary" : "default"} asChild>
+            <Button variant={inverted ? "secondary" : "default"} asChild>
               <Link href={ctaHref}>{ctaLabel === "Start assessment" ? t("start") : ctaLabel}</Link>
             </Button>
           )}

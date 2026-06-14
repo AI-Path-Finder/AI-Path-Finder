@@ -21,7 +21,7 @@ export default function RecommendationPage() {
   return (
     <PageTransition>
       <Nav showCta={false} />
-      <main className="mx-auto max-w-6xl px-6 pb-24 pt-32">
+      <main className="mx-auto max-w-[1500px] px-5 pb-24 pt-32 md:px-8">
         <div className="rounded-[38px] bg-[#ffe0d8] p-8 md:p-14">
           <ExecutiveSummary recommendation={recommendation} />
         </div>

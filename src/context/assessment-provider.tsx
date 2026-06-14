@@ -117,7 +117,11 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setSelectedOpportunity = useCallback((id: string) => {
-    setState((prev) => ({ ...prev, selectedOpportunityId: id }));
+    setState((prev) => ({
+      ...prev,
+      selectedOpportunityId: id,
+      roiInputs: prev.selectedOpportunityId === id ? prev.roiInputs : {},
+    }));
   }, []);
 
   const setROIInputs = useCallback((inputs: Partial<ROIInputs>) => {
@@ -130,7 +134,9 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
   const generateRecommendation = useCallback(() => {
     setState((prev) => {
       if (prev.opportunities.length === 0) return prev;
-      const top = getTopRecommendation(prev.opportunities);
+      const top =
+        prev.opportunities.find((opportunity) => opportunity.id === prev.selectedOpportunityId) ??
+        getTopRecommendation(prev.opportunities);
       const recommendation: Recommendation = {
         opportunity: top,
         reasons: buildRecommendationReasons(top),

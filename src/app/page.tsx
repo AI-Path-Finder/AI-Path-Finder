@@ -23,8 +23,8 @@ export default function LandingPage() {
     <PageTransition>
       <div className="overflow-hidden rounded-b-[42px] bg-[#2f1c4d] text-white md:rounded-b-[72px]">
         <Nav inverted />
-        <section className="px-6 pb-14 pt-28 md:px-10 md:pb-20 md:pt-32">
-          <div className="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[1fr_.85fr] lg:items-center">
+        <section className="px-5 pb-14 pt-28 md:px-7 md:pb-20 md:pt-32">
+          <div className="mx-auto grid max-w-[1600px] gap-12 lg:grid-cols-[1fr_.85fr] lg:items-center">
             <div>
               <p className="mb-5 text-sm font-semibold text-[#d7c8ff]">{t("heroEyebrow")}</p>
               <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl text-[clamp(3.1rem,6.2vw,6.6rem)] font-semibold leading-[.92] tracking-[-.075em]">
@@ -46,8 +46,8 @@ export default function LandingPage() {
       </div>
 
       <main>
-        <section id="platform" className="px-6 py-24 md:px-10 md:py-36">
-          <div className="mx-auto max-w-[1440px]">
+        <section id="platform" className="px-5 py-24 md:px-7 md:py-36">
+          <div className="mx-auto max-w-[1600px]">
             <div className="mx-auto max-w-4xl text-center">
               <p className="mb-5 text-sm font-semibold text-[#6b4eff]">{t("askAnalyzeAct")}</p>
               <h2 className="text-5xl font-semibold leading-[1] tracking-[-.065em] md:text-7xl">
@@ -65,8 +65,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="how-it-works" className="px-4 md:px-6">
-          <div className="mx-auto max-w-[1480px] rounded-[40px] bg-[#f0edff] px-6 py-20 md:rounded-[68px] md:px-16 md:py-28">
+        <section id="how-it-works" className="px-3 md:px-4">
+          <div className="mx-auto max-w-[1640px] rounded-[40px] bg-[#f0edff] px-6 py-20 md:rounded-[68px] md:px-16 md:py-28">
             <div className="grid gap-16 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
               <div>
                 <p className="mb-5 text-sm font-semibold text-[#6b4eff]">{t("intelligentDiscovery")}</p>
@@ -91,8 +91,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="outcomes" className="px-6 py-24 md:px-10 md:py-36">
-          <div className="mx-auto max-w-[1440px]">
+        <section id="outcomes" className="px-5 py-24 md:px-7 md:py-36">
+          <div className="mx-auto max-w-[1600px]">
             <div className="grid gap-12 lg:grid-cols-[.8fr_1.2fr]">
               <div>
                 <p className="mb-5 text-sm font-semibold text-[#ff6c4c]">{t("decisionIntelligence")}</p>
@@ -111,14 +111,14 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="px-4 pb-5 md:px-6">
-          <div className="mx-auto max-w-[1480px] rounded-[40px] bg-[#ffdd8d] px-6 py-20 text-center md:rounded-[68px] md:px-16 md:py-28">
+        <section className="px-3 pb-5 md:px-4">
+          <div className="mx-auto max-w-[1640px] rounded-[40px] bg-[#ffdd8d] px-6 py-20 text-center md:rounded-[68px] md:px-16 md:py-28">
             <h2 className="mx-auto max-w-4xl text-5xl font-semibold leading-[.98] tracking-[-.065em] md:text-8xl">{t("finalCta")}</h2>
             <Button size="lg" className="mt-9" asChild><Link href="/onboarding">{t("start")} <MoveUpRight /></Link></Button>
           </div>
         </section>
       </main>
-      <footer className="px-6 py-10 md:px-10"><div className="mx-auto flex max-w-[1440px] justify-between text-sm"><strong>AdoptAI</strong><span className="text-muted-foreground">{t("opportunityIntelligence")}</span></div></footer>
+      <footer className="px-5 py-10 md:px-7"><div className="mx-auto flex max-w-[1600px] justify-between text-sm"><strong>AdoptAI</strong><span className="text-muted-foreground">{t("opportunityIntelligence")}</span></div></footer>
     </PageTransition>
   );
 }

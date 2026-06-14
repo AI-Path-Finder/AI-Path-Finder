@@ -31,7 +31,7 @@ export default function AnalysisPage() {
       {loading && !showResults ? (
         <AnalysisLoader onComplete={() => { setLoading(false); setShowResults(true); }} />
       ) : (
-        <main className="mx-auto max-w-6xl px-6 pb-24 pt-32">
+        <main className="mx-auto max-w-[1500px] px-5 pb-24 pt-32 md:px-8">
           <header className="mb-12 rounded-[38px] bg-[#2f1c4d] p-8 text-white md:p-14">
             <p className="eyebrow mb-6 text-white/60">
               {t("analysisComplete")} · {opportunities.length} {t("opportunitiesIdentified")}

@@ -25,7 +25,7 @@ export default function PrioritizePage() {
   return (
     <PageTransition>
       <Nav ctaHref="/roi" ctaLabel={t("simulateRoi")} />
-      <main className="mx-auto max-w-6xl px-6 pb-24 pt-32">
+      <main className="mx-auto max-w-[1500px] px-5 pb-24 pt-32 md:px-8">
         <header className="mb-12 rounded-[38px] bg-[#ffdd8d] p-8 md:p-14">
           <p className="eyebrow mb-6">{t("portfolioView")}</p>
           <h1 className="text-5xl font-semibold leading-[1.02] tracking-[-0.06em] md:text-7xl">
