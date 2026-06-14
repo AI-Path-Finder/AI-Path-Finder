@@ -1,6 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+const INK = "#2f1c4d";
+const VIOLET = "#bba9ff";
+const CREAM = "#fff6dc";
+const CORAL = "#ff9d86";
+const PAPER = "#fffdf8";
 
 export function OpportunityGraphic({
   opportunityId,
@@ -12,89 +16,144 @@ export function OpportunityGraphic({
   className?: string;
 }) {
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-white/60 ${compact ? "h-20 w-24" : "h-40 w-full"} ${className}`} aria-hidden="true">
-      <svg viewBox="0 0 180 150" className="h-full w-full">
-        {graphicFor(opportunityId)}
+    <div className={`${compact ? "h-16 w-32" : "h-40 w-full"} ${className}`} aria-hidden="true">
+      <svg viewBox="0 0 300 140" className="h-full w-full overflow-visible">
+        <FlowLines />
+        <Inputs type={opportunityId} />
+        <Processor type={opportunityId} />
+        <Outputs type={opportunityId} />
       </svg>
     </div>
   );
 }
 
-function graphicFor(id: string) {
-  switch (id) {
-    case "document-processing":
-      return (
-        <>
-          {[0, 1, 2].map((item) => <motion.rect key={item} x={18 + item * 8} y={28 + item * 8} width="58" height="76" rx="6" fill="#fffdf8" stroke="#2f1c4d" initial={{ x: -8 }} animate={{ x: 0 }} />)}
-          <path d="M46 53h27M46 65h20M46 77h24" stroke="#6b4eff" strokeWidth="4" strokeLinecap="round" />
-          <path d="M92 70h22" stroke="#2f1c4d" strokeWidth="3" strokeDasharray="4 4" />
-          <path d="m109 64 9 6-9 6" fill="none" stroke="#2f1c4d" strokeWidth="3" />
-          <rect x="122" y="34" width="40" height="28" rx="6" fill="#e8ddff" /><rect x="122" y="70" width="40" height="28" rx="6" fill="#ffdd8d" /><rect x="122" y="106" width="40" height="20" rx="6" fill="#ff9d86" />
-        </>
-      );
-    case "customer-support":
-      return (
-        <>
-          <rect x="18" y="28" width="55" height="30" rx="15" fill="#fffdf8" stroke="#2f1c4d" /><rect x="18" y="68" width="68" height="30" rx="15" fill="#fffdf8" stroke="#2f1c4d" /><rect x="18" y="108" width="48" height="24" rx="12" fill="#fffdf8" stroke="#2f1c4d" />
-          <path d="M92 78h18M105 72l8 6-8 6" stroke="#2f1c4d" strokeWidth="3" fill="none" />
-          <circle cx="138" cy="78" r="27" fill="#6b4eff" /><path d="M126 78c0-8 5-14 12-14s12 6 12 14v9h-8v-9c0-3-2-6-4-6s-4 3-4 6v9h-8z" fill="white" />
-        </>
-      );
-    case "knowledge-assistant":
-      return (
-        <>
-          <circle cx="90" cy="76" r="25" fill="#6b4eff" />
-          {[[35,35],[145,35],[34,116],[146,116]].map(([x,y], index) => <g key={index}><line x1="90" y1="76" x2={x} y2={y} stroke="#2f1c4d" strokeWidth="2" strokeDasharray="4 4" /><rect x={x-20} y={y-14} width="40" height="28" rx="5" fill={index % 2 ? "#ffdd8d" : "#fffdf8"} stroke="#2f1c4d" /></g>)}
-          <path d="M79 70h22M79 78h16M79 86h19" stroke="white" strokeWidth="3" strokeLinecap="round" />
-        </>
-      );
-    case "sales-assistant":
-      return (
-        <>
-          <path d="M25 28h130l-23 30H48z" fill="#e8ddff" stroke="#2f1c4d" /><path d="M48 64h84l-20 29H68z" fill="#ffdd8d" stroke="#2f1c4d" /><path d="M69 99h42l-10 25H79z" fill="#ff9d86" stroke="#2f1c4d" />
-          <circle cx="145" cy="115" r="17" fill="#6b4eff" /><path d="m137 115 6 6 11-13" fill="none" stroke="white" strokeWidth="3" />
-        </>
-      );
-    case "invoice-automation":
-      return (
-        <>
-          <rect x="28" y="24" width="72" height="102" rx="7" fill="#fffdf8" stroke="#2f1c4d" />
-          <path d="M45 48h37M45 62h27M45 84h37M45 98h23" stroke="#2f1c4d" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="126" cy="81" r="31" fill="#ffdd8d" stroke="#2f1c4d" /><path d="m111 81 10 10 20-23" fill="none" stroke="#2f1c4d" strokeWidth="5" />
-        </>
-      );
-    case "it-helpdesk":
-      return (
-        <>
-          <rect x="20" y="31" width="140" height="82" rx="10" fill="#2f1c4d" /><path d="M37 55h35M37 68h25M37 81h42" stroke="#e8ddff" strokeWidth="4" strokeLinecap="round" />
-          <circle cx="125" cy="72" r="25" fill="#6b4eff" /><path d="M115 72h20M125 62v20" stroke="white" strokeWidth="4" />
-          <path d="M70 126h40M82 113v13M98 113v13" stroke="#2f1c4d" strokeWidth="4" strokeLinecap="round" />
-        </>
-      );
-    case "marketing-content":
-      return (
-        <>
-          <rect x="24" y="27" width="55" height="80" rx="8" fill="#e8ddff" stroke="#2f1c4d" /><rect x="87" y="42" width="68" height="80" rx="8" fill="#fffdf8" stroke="#2f1c4d" />
-          <circle cx="51" cy="52" r="11" fill="#ff9d86" /><path d="m34 91 13-17 10 9 10-14 7 22z" fill="#6b4eff" />
-          <path d="M102 64h38M102 78h27M102 92h34" stroke="#2f1c4d" strokeWidth="3" strokeLinecap="round" />
-          <path d="m144 24 3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#ff9d86" />
-        </>
-      );
-    case "contract-review":
-      return (
-        <>
-          <rect x="34" y="20" width="82" height="110" rx="7" fill="#fffdf8" stroke="#2f1c4d" />
-          <path d="M50 45h48M50 59h40M50 73h48M50 87h32M50 101h45" stroke="#2f1c4d" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="121" cy="94" r="26" fill="#ff9d86" stroke="#2f1c4d" /><path d="M121 80v17M121 106v2" stroke="#2f1c4d" strokeWidth="5" strokeLinecap="round" />
-        </>
-      );
-    default:
-      return (
-        <>
-          <circle cx="90" cy="75" r="38" fill="#6b4eff" />
-          <path d="M53 75h74M90 38v74" stroke="white" strokeWidth="4" strokeDasharray="7 7" />
-          <circle cx="90" cy="75" r="12" fill="#ffdd8d" />
-        </>
-      );
+function FlowLines() {
+  return (
+    <g fill="none" stroke={INK} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M76 41h18q6 0 6 6v17q0 6 6 6h12" />
+      <path d="M76 70h42" />
+      <path d="M76 99h18q6 0 6-6V76q0-6 6-6h12" />
+      <path d="m113 66 5 4-5 4" />
+      <path d="M182 70h18q6 0 6-6V47q0-6 6-6h12" />
+      <path d="M182 70h42" />
+      <path d="M182 70h18q6 0 6 6v17q0 6 6 6h12" />
+      <path d="m219 37 5 4-5 4M219 66l5 4-5 4M219 95l5 4-5 4" />
+    </g>
+  );
+}
+
+function Inputs({ type }: { type: string }) {
+  const widths = type === "knowledge-assistant" ? [42, 55, 34] : type === "sales-assistant" ? [28, 43, 52] : [48, 38, 54];
+  return (
+    <g>
+      {widths.map((width, index) => (
+        <rect
+          key={index}
+          x={12 + (index % 2) * 7}
+          y={30 + index * 29}
+          width={width}
+          height="16"
+          rx="5"
+          fill={index === 1 ? CREAM : PAPER}
+          stroke={INK}
+          strokeWidth="1.3"
+        />
+      ))}
+      <InputMarks type={type} />
+    </g>
+  );
+}
+
+function InputMarks({ type }: { type: string }) {
+  if (type === "customer-support" || type === "it-helpdesk") {
+    return <g fill={CORAL}><circle cx="21" cy="38" r="2.5" /><circle cx="28" cy="67" r="2.5" /><circle cx="21" cy="96" r="2.5" /></g>;
   }
+  if (type === "document-processing" || type === "invoice-automation" || type === "contract-review") {
+    return <g stroke={INK} strokeWidth="1"><path d="M20 35h19M20 40h13M27 64h20M27 69h14M20 93h24M20 98h17" /></g>;
+  }
+  if (type === "sales-assistant") {
+    return <g fill={CORAL}><circle cx="21" cy="38" r="3" /><circle cx="28" cy="67" r="3" /><circle cx="21" cy="96" r="3" /></g>;
+  }
+  return <g fill={VIOLET}><rect x="20" y="35" width="18" height="6" rx="2" /><rect x="27" y="64" width="22" height="6" rx="2" /><rect x="20" y="93" width="25" height="6" rx="2" /></g>;
+}
+
+function Processor({ type }: { type: string }) {
+  return (
+    <g>
+      <rect x="120" y="35" width="60" height="70" rx="16" fill="none" stroke={INK} strokeWidth="1.5" />
+      <rect x="126" y="41" width="23" height="25" rx="7" fill={VIOLET} />
+      <rect x="151" y="41" width="23" height="25" rx="7" fill={PAPER} stroke={INK} strokeWidth="1" />
+      <rect x="126" y="68" width="23" height="25" rx="7" fill={PAPER} stroke={INK} strokeWidth="1" />
+      <rect x="151" y="68" width="23" height="25" rx="7" fill={VIOLET} />
+      <path d="M137 66v7M149 80h7M163 66v7M149 54h7" fill="none" stroke={INK} strokeWidth="1.1" />
+      <ProcessorMark type={type} />
+    </g>
+  );
+}
+
+function ProcessorMark({ type }: { type: string }) {
+  if (type === "document-processing") return <path d="M139 49h22M139 55h15M139 61h19" stroke={INK} strokeWidth="1.5" strokeLinecap="round" />;
+  if (type === "customer-support") return <path d="M137 51h25v12h-14l-6 5v-5h-5z" fill="none" stroke={INK} strokeWidth="1.4" />;
+  if (type === "knowledge-assistant") return <g fill="none" stroke={INK} strokeWidth="1.5"><circle cx="147" cy="55" r="8" /><path d="m153 61 9 8" /></g>;
+  if (type === "sales-assistant") return <path d="M137 62h7l5-10 6 7 8-13" fill="none" stroke={INK} strokeWidth="1.6" />;
+  if (type === "invoice-automation") return <path d="m138 56 7 7 17-18" fill="none" stroke={INK} strokeWidth="1.8" />;
+  if (type === "it-helpdesk") return <g fill="none" stroke={INK} strokeWidth="1.5"><circle cx="150" cy="56" r="10" /><path d="M150 50v12M144 56h12" /></g>;
+  if (type === "marketing-content") return <path d="m138 63 7-13 7 8 6-11 6 16z" fill="none" stroke={INK} strokeWidth="1.5" />;
+  if (type === "contract-review") return <path d="M142 45v15M142 65v2M153 48h9M153 55h9M153 62h6" stroke={INK} strokeWidth="1.6" strokeLinecap="round" />;
+  return <circle cx="150" cy="56" r="9" fill="none" stroke={INK} strokeWidth="1.5" />;
+}
+
+function Outputs({ type }: { type: string }) {
+  if (type === "customer-support" || type === "it-helpdesk") return <StatusOutputs type={type} />;
+  if (type === "document-processing" || type === "invoice-automation") return <GridOutputs type={type} />;
+  if (type === "knowledge-assistant") return <KnowledgeOutputs />;
+  if (type === "sales-assistant") return <SalesOutputs />;
+  if (type === "marketing-content") return <ChannelOutputs />;
+  if (type === "contract-review") return <RiskOutputs />;
+  return <GridOutputs type={type} />;
+}
+
+function GridOutputs({ type }: { type: string }) {
+  return (
+    <g>
+      {[0, 1, 2].map((row) => [0, 1].map((column) => (
+        <g key={`${row}-${column}`}>
+          <rect x={228 + column * 29} y={31 + row * 29} width="24" height="20" rx="5" fill={(row + column) % 3 === 0 ? CORAL : PAPER} stroke={INK} strokeWidth="1.2" />
+          {type === "invoice-automation" && row === 2 && column === 1 && <path d="m264 94 4 4 7-8" fill="none" stroke={INK} strokeWidth="1.4" />}
+          {type === "document-processing" && <path d={`M${234 + column * 29} ${38 + row * 29}h12M${234 + column * 29} ${43 + row * 29}h8`} stroke={INK} strokeWidth="1" />}
+        </g>
+      )))}
+    </g>
+  );
+}
+
+function StatusOutputs({ type }: { type: string }) {
+  return (
+    <g>
+      {[0, 1, 2].map((row) => (
+        <g key={row}>
+          <rect x="228" y={32 + row * 29} width="58" height="19" rx="5" fill={row === 0 ? VIOLET : PAPER} stroke={INK} strokeWidth="1.2" />
+          <circle cx="238" cy={41.5 + row * 29} r="3" fill={row === 2 ? CORAL : INK} />
+          <path d={`M246 ${41.5 + row * 29}h${type === "it-helpdesk" ? 27 - row * 4 : 32 - row * 6}`} stroke={INK} strokeWidth="1.3" />
+          {row === 0 && <path d={`m272 ${38 + row * 29} 4 4 7-8`} fill="none" stroke={INK} strokeWidth="1.3" />}
+        </g>
+      ))}
+    </g>
+  );
+}
+
+function KnowledgeOutputs() {
+  return <g><rect x="228" y="31" width="58" height="78" rx="7" fill={PAPER} stroke={INK} strokeWidth="1.2" /><path d="M238 45h37M238 55h27M238 72h33M238 82h22M238 96h31" stroke={INK} strokeWidth="1.4" strokeLinecap="round" /><circle cx="275" cy="96" r="5" fill={VIOLET} /></g>;
+}
+
+function SalesOutputs() {
+  return <g><path d="M228 31h58l-9 22h-40zM238 60h38l-8 20h-22zM247 87h20l-5 20h-10z" fill={PAPER} stroke={INK} strokeWidth="1.2" /><circle cx="279" cy="102" r="7" fill={CORAL} /><path d="m275 102 3 3 5-7" fill="none" stroke={INK} strokeWidth="1.2" /></g>;
+}
+
+function ChannelOutputs() {
+  return <g>{[[228,32],[259,32],[228,65],[259,65],[228,98],[259,98]].map(([x,y], index) => <rect key={index} x={x} y={y} width="24" height="20" rx="5" fill={index === 1 || index === 4 ? CORAL : PAPER} stroke={INK} strokeWidth="1.2" />)}<path d="M234 43h12M265 43h12M234 76h12M265 76h12M234 109h12M265 109h12" stroke={INK} strokeWidth="1" /></g>;
+}
+
+function RiskOutputs() {
+  return <g><rect x="228" y="30" width="58" height="80" rx="7" fill={PAPER} stroke={INK} strokeWidth="1.2" /><path d="M238 44h29M238 55h38M238 66h25M238 88h36M238 99h22" stroke={INK} strokeWidth="1.3" strokeLinecap="round" /><rect x="267" y="61" width="12" height="12" rx="3" fill={CORAL} /><path d="M273 64v4M273 70v1" stroke={INK} strokeWidth="1.2" /></g>;
 }

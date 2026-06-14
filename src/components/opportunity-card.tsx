@@ -22,7 +22,7 @@ export function OpportunityCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.06 }}
       onClick={onClick}
-      className={`mb-4 grid gap-7 rounded-[28px] p-7 md:grid-cols-[54px_160px_1.25fr_1fr] md:p-9 ${
+      className={`mb-4 grid gap-7 rounded-[28px] p-7 md:p-9 lg:grid-cols-[42px_260px_1.25fr_1fr] ${
         index % 3 === 0
           ? "bg-[#f0edff]"
           : index % 3 === 1
