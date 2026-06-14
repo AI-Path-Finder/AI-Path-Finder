@@ -101,7 +101,7 @@ export default function LandingPage() {
               </div>
               <div className="divide-y divide-border border-y border-border">
                 {opportunities.map(([id, title, value], i) => (
-                  <div key={title} className="grid grid-cols-[42px_128px_1fr_auto] items-center gap-4 py-6">
+                  <div key={title} className="grid grid-cols-[42px_80px_1fr_auto] items-center gap-4 py-6">
                     <span className="text-sm text-muted-foreground">0{i + 1}</span>
                     <OpportunityGraphic opportunityId={id} compact />
                     <span className="text-xl font-semibold tracking-[-.025em]">{td(title)}</span>
