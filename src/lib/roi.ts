@@ -1,14 +1,19 @@
 import type { ROIInputs, ROIResults } from "@/types/assessment";
 
 export function calculateROI(inputs: ROIInputs): ROIResults {
-  const laborCostPerHour = inputs.averageSalary / 2080;
+  const scenarioFactor =
+    inputs.scenario === "conservative" ? 0.8 : inputs.scenario === "optimistic" ? 1.15 : 1;
+  const laborCostPerHour = inputs.averageSalary / (40 * 52);
+  const effectiveAutomationPercent =
+    inputs.automationPercent * scenarioFactor * (1 - inputs.reviewPercent / 100);
   const hoursSavedPerYear =
     inputs.employeeCount *
     inputs.manualHoursPerWeek *
     52 *
-    (inputs.automationPercent / 100);
-  const annualSavings = Math.round(hoursSavedPerYear * laborCostPerHour);
-  const implementationCost = inputs.implementationCost;
+    (effectiveAutomationPercent / 100);
+  const grossSavings = hoursSavedPerYear * laborCostPerHour;
+  const annualSavings = Math.max(0, Math.round(grossSavings - inputs.annualMaintenanceCost));
+  const implementationCost = inputs.softwareCost + inputs.integrationCost + inputs.trainingCost;
   const paybackMonths =
     annualSavings > 0
       ? Math.round((implementationCost / annualSavings) * 12 * 10) / 10
@@ -37,8 +42,11 @@ export function calculateROI(inputs: ROIInputs): ROIResults {
   return {
     annualSavings,
     implementationCost,
+    annualMaintenanceCost: inputs.annualMaintenanceCost,
     paybackMonths,
     roi12Month,
+    value24Month: Math.round(annualSavings * 2 - implementationCost),
+    effectiveAutomationPercent: Math.round(effectiveAutomationPercent * 10) / 10,
     monthlyData,
   };
 }
@@ -50,9 +58,15 @@ export function defaultROIInputs(
 ): ROIInputs {
   return {
     employeeCount,
-    averageSalary: 75000,
+    averageSalary: 48000,
     manualHoursPerWeek: 12,
     automationPercent,
-    implementationCost,
+    softwareCost: Math.round(implementationCost * 0.3),
+    integrationCost: Math.round(implementationCost * 0.5),
+    trainingCost: Math.round(implementationCost * 0.2),
+    annualMaintenanceCost: Math.round(implementationCost * 0.18),
+    reviewPercent: 15,
+    currency: "EUR",
+    scenario: "base",
   };
 }

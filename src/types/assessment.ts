@@ -1,6 +1,8 @@
 export type CompanySize = "1-50" | "51-200" | "201-1000" | "1000+";
 
 export type Complexity = "Low" | "Medium" | "High";
+export type Currency = "EUR" | "GBP" | "USD" | "CHF";
+export type ROIScenario = "conservative" | "base" | "optimistic";
 
 export interface OnboardingData {
   industry: string;
@@ -32,14 +34,23 @@ export interface ROIInputs {
   averageSalary: number;
   manualHoursPerWeek: number;
   automationPercent: number;
-  implementationCost: number;
+  softwareCost: number;
+  integrationCost: number;
+  trainingCost: number;
+  annualMaintenanceCost: number;
+  reviewPercent: number;
+  currency: Currency;
+  scenario: ROIScenario;
 }
 
 export interface ROIResults {
   annualSavings: number;
   implementationCost: number;
+  annualMaintenanceCost: number;
   paybackMonths: number;
   roi12Month: number;
+  value24Month: number;
+  effectiveAutomationPercent: number;
   monthlyData: { month: string; savings: number; cost: number; net: number }[];
 }
 

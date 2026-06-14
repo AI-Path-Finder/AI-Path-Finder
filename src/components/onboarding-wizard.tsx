@@ -133,8 +133,8 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-4xl flex-col px-6 pb-10 pt-24 md:px-10 md:pt-28">
-      <div className="mb-8">
+    <div className="mx-auto flex h-[100dvh] max-w-4xl flex-col overflow-hidden px-6 pb-3 pt-20 md:px-10 md:pb-5 md:pt-24">
+      <div className="mb-3 shrink-0">
         <Progress value={progress} className="mb-5 h-1 rounded-full" />
         <StepIndicator
           current={step + 1}
@@ -150,18 +150,18 @@ export function OnboardingWizard() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-1 flex-col justify-center pb-10"
+          className="flex min-h-0 flex-1 flex-col justify-center overflow-y-auto pb-4"
         >
           <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-[#6b4eff]">
             <span>{String(step + 1).padStart(2, "0")}</span>
             <ArrowRight className="h-3.5 w-3.5" />
           </div>
-          <h1 className="mb-5 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.055em] md:text-6xl">
+          <h1 className="mb-3 max-w-3xl text-[clamp(2rem,5.2vh,3.75rem)] font-semibold leading-[1.02] tracking-[-0.055em]">
             {step < STEP_TITLES.length
               ? t(STEP_TITLES[step])
               : t("readyQuestion")}
           </h1>
-          <p className="mb-12 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+          <p className="mb-5 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
             {step < STEP_SUBTITLES.length
               ? t(STEP_SUBTITLES[step])
               : t("reviewHelp")}
@@ -216,12 +216,12 @@ export function OnboardingWizard() {
               onChange={(e) =>
                 setOnboarding({ businessProcesses: e.target.value })
               }
-              className="min-h-[220px] text-2xl"
+              className="min-h-[140px] text-xl md:min-h-[180px] md:text-2xl"
             />
           )}
 
           {step === 4 && (
-            <div className="space-y-6">
+            <div className="space-y-3">
               <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
                 {WORKFLOW_SUGGESTIONS.map(([value, key]) => (
                   <OptionChip
@@ -233,7 +233,7 @@ export function OnboardingWizard() {
                   </OptionChip>
                 ))}
               </div>
-              <div className="flex max-w-2xl gap-4">
+              <div className="flex max-w-2xl gap-3">
                 <Input
                   placeholder={t("addWorkflow")}
                   value={customWorkflow}
@@ -300,7 +300,7 @@ export function OnboardingWizard() {
         </motion.div>
       </AnimatePresence>
 
-      <div className="flex items-center justify-between pt-5">
+      <div className="z-20 flex shrink-0 items-center justify-between border-t border-border bg-background/95 pt-3 backdrop-blur">
         <Button
           variant="ghost"
           onClick={goBack}
@@ -350,7 +350,7 @@ function OptionButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex min-h-16 items-center rounded-lg border-2 px-4 py-3 text-left transition-all",
+        "flex min-h-12 items-center rounded-lg border-2 px-4 py-2 text-left transition-all",
         selected
           ? "border-[#6b4eff] bg-[#e8ddff] text-foreground"
           : "border-border bg-white/60 text-foreground hover:border-[#6b4eff]/50"
@@ -375,7 +375,7 @@ function OptionChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex min-h-14 items-center gap-3 rounded-lg border-2 px-4 py-3 text-left text-base transition-all",
+        "flex min-h-11 items-center gap-3 rounded-lg border-2 px-4 py-2 text-left text-sm transition-all md:text-base",
         selected
           ? "border-[#6b4eff] bg-[#e8ddff] text-foreground"
           : "border-border bg-white/60 text-foreground hover:border-[#6b4eff]/50"

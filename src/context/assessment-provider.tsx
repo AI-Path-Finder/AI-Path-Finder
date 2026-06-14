@@ -39,6 +39,11 @@ function normalizeStoredState(value: unknown): AssessmentState {
   if (!value || typeof value !== "object") return initialState;
   const stored = value as Partial<AssessmentState>;
 
+  const roiInputs = stored.roiInputs && typeof stored.roiInputs === "object" ? stored.roiInputs : {};
+  const normalizedROI =
+    "softwareCost" in roiInputs
+      ? roiInputs
+      : {};
   return {
     onboarding:
       stored.onboarding && typeof stored.onboarding === "object"
@@ -51,10 +56,7 @@ function normalizeStoredState(value: unknown): AssessmentState {
       typeof stored.selectedOpportunityId === "string"
         ? stored.selectedOpportunityId
         : null,
-    roiInputs:
-      stored.roiInputs && typeof stored.roiInputs === "object"
-        ? stored.roiInputs
-        : {},
+    roiInputs: normalizedROI,
     recommendation:
       stored.recommendation && typeof stored.recommendation === "object"
         ? stored.recommendation

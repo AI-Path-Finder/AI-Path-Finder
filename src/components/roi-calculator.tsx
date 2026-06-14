@@ -1,93 +1,113 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  Area,
-  AreaChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { Slider } from "@/components/ui/slider";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Input } from "@/components/ui/input";
-import { AnimatedCounter } from "@/components/animated-counter";
 import { calculateROI } from "@/lib/roi";
-import { formatCurrency } from "@/lib/utils";
-import type { ROIInputs } from "@/types/assessment";
+import type { Currency, ROIInputs, ROIScenario } from "@/types/assessment";
 import { useLanguage } from "@/context/language-provider";
 
-export function ROICalculator({
-  inputs,
-  onChange,
-}: {
-  inputs: ROIInputs;
-  onChange: (inputs: Partial<ROIInputs>) => void;
-}) {
+const CURRENCIES: Currency[] = ["EUR", "GBP", "USD", "CHF"];
+const SCENARIOS: ROIScenario[] = ["conservative", "base", "optimistic"];
+
+export function ROICalculator({ inputs, onChange }: { inputs: ROIInputs; onChange: (inputs: Partial<ROIInputs>) => void }) {
   const { t } = useLanguage();
   const results = useMemo(() => calculateROI(inputs), [inputs]);
+  const money = (value: number) => new Intl.NumberFormat(undefined, { style: "currency", currency: inputs.currency, maximumFractionDigits: 0 }).format(value);
 
   return (
-    <div>
-      <section className="grid gap-12 border-y border-border py-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
+    <div className="space-y-10">
+      <section className="flex flex-wrap items-center justify-between gap-5 border-y border-border py-5">
+        <div className="flex gap-2">
+          {SCENARIOS.map((scenario) => (
+            <button key={scenario} onClick={() => onChange({ scenario })} className={`rounded-md px-4 py-2 text-sm font-semibold ${inputs.scenario === scenario ? "bg-[#2f1c4d] text-white" : "bg-secondary"}`}>
+              {t(scenario)}
+            </button>
+          ))}
+        </div>
+        <label className="flex items-center gap-3 text-sm text-muted-foreground">
+          {t("currency")}
+          <select value={inputs.currency} onChange={(event) => onChange({ currency: event.target.value as Currency })} className="rounded-md border border-border bg-background px-3 py-2 font-semibold text-foreground">
+            {CURRENCIES.map((currency) => <option key={currency}>{currency}</option>)}
+          </select>
+        </label>
+      </section>
+
+      <section className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <div>
-          <p className="eyebrow mb-8">{t("assumptions")}</p>
-          <div className="space-y-8">
+          <p className="eyebrow mb-6">{t("editableEstimates")}</p>
+          <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
             <InputField label={t("employeeCount")} value={inputs.employeeCount} min={1} max={5000} onChange={(v) => onChange({ employeeCount: v })} />
-            <InputField label={t("averageSalary")} value={inputs.averageSalary} min={30000} max={250000} step={5000} prefix="$" onChange={(v) => onChange({ averageSalary: v })} />
-            <SliderField label={t("manualHoursWeek")} value={inputs.manualHoursPerWeek} min={1} max={40} suffix={t("hoursShort")} onChange={(v) => onChange({ manualHoursPerWeek: v })} />
-            <SliderField label={t("expectedAutomation")} value={inputs.automationPercent} min={10} max={95} suffix="%" onChange={(v) => onChange({ automationPercent: v })} />
-            <InputField label={t("implementationCost")} value={inputs.implementationCost} min={50000} max={500000} step={10000} prefix="$" onChange={(v) => onChange({ implementationCost: v })} />
+            <InputField label={t("averageSalary")} value={inputs.averageSalary} min={15000} max={250000} step={1000} suffix={inputs.currency} onChange={(v) => onChange({ averageSalary: v })} />
+            <InputField label={t("manualHoursWeek")} value={inputs.manualHoursPerWeek} min={1} max={40} suffix={t("hoursShort")} onChange={(v) => onChange({ manualHoursPerWeek: v })} />
+            <InputField label={t("expectedAutomation")} value={inputs.automationPercent} min={5} max={95} suffix="%" onChange={(v) => onChange({ automationPercent: v })} />
+            <InputField label={t("softwareCost")} value={inputs.softwareCost} min={0} max={1000000} step={1000} suffix={inputs.currency} onChange={(v) => onChange({ softwareCost: v })} />
+            <InputField label={t("integrationCost")} value={inputs.integrationCost} min={0} max={1000000} step={1000} suffix={inputs.currency} onChange={(v) => onChange({ integrationCost: v })} />
+            <InputField label={t("trainingCost")} value={inputs.trainingCost} min={0} max={500000} step={1000} suffix={inputs.currency} onChange={(v) => onChange({ trainingCost: v })} />
+            <InputField label={t("maintenanceCost")} value={inputs.annualMaintenanceCost} min={0} max={500000} step={1000} suffix={inputs.currency} onChange={(v) => onChange({ annualMaintenanceCost: v })} />
+            <InputField label={t("reviewTime")} value={inputs.reviewPercent} min={0} max={80} suffix="%" onChange={(v) => onChange({ reviewPercent: v })} />
           </div>
         </div>
 
-        <div>
-          <p className="eyebrow mb-8">{t("projectedReturn")}</p>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 border-b border-border pb-10">
-            <Result label={t("annualSavings")}><AnimatedCounter value={results.annualSavings} prefix="$" /></Result>
-            <Result label={t("implementation")}><AnimatedCounter value={results.implementationCost} prefix="$" /></Result>
-            <Result label={t("paybackPeriod")}><AnimatedCounter value={results.paybackMonths} decimals={1} suffix={t("months")} /></Result>
-            <Result label={t("roi12")}><AnimatedCounter value={results.roi12Month} suffix="%" /></Result>
+        <div className="rounded-[30px] bg-[#e8ddff] p-7 md:p-9">
+          <p className="eyebrow mb-6">{t("projectedReturn")}</p>
+          <div className="grid grid-cols-2 gap-6">
+            <Result label={t("annualSavings")} value={money(results.annualSavings)} />
+            <Result label={t("totalImplementationCost")} value={money(results.implementationCost)} />
+            <Result label={t("paybackPeriod")} value={`${results.paybackMonths}${t("months")}`} />
+            <Result label={t("roi12")} value={`${results.roi12Month}%`} />
+            <Result label={t("value24")} value={money(results.value24Month)} />
+            <Result label={t("effectiveAutomation")} value={`${results.effectiveAutomationPercent}%`} />
           </div>
-          <p className="mb-5 mt-10 text-xs text-muted-foreground">{t("cumulativeValue")}</p>
-          <div className="h-[280px] w-full">
+          <div className="mt-8 h-52">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={results.monthlyData}>
-                <XAxis dataKey="month" tick={{ fill: "#746e67", fontSize: 11 }} axisLine={false} tickLine={false} interval={3} />
-                <YAxis tick={{ fill: "#746e67", fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
-                <Tooltip contentStyle={{ background: "#f7f3eb", border: "1px solid #d7d0c7", borderRadius: "2px" }} formatter={(value: number) => [formatCurrency(value), ""]} />
-                <Area type="monotone" dataKey="savings" stroke="#a7a097" strokeWidth={1.5} fill="transparent" name={t("cumulativeSavings")} />
-                <Area type="monotone" dataKey="net" stroke="#1d1a17" strokeWidth={2} fill="rgba(29,26,23,.05)" name={t("netValue")} />
+                <XAxis dataKey="month" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} interval={5} />
+                <YAxis tick={{ fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${Math.round(v / 1000)}k`} />
+                <Tooltip formatter={(value: number) => [money(value), ""]} />
+                <Area type="monotone" dataKey="net" stroke="#2f1c4d" fill="rgba(47,28,77,.12)" name={t("netValue")} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
+        </div>
+      </section>
+
+      <section className="grid gap-8 border-y border-border py-8 md:grid-cols-2">
+        <div>
+          <h2 className="text-2xl font-semibold">{t("mainAssumptions")}</h2>
+          <ul className="mt-5 space-y-3 text-sm leading-relaxed text-muted-foreground">
+            <li>{t("assumptionHours")}</li>
+            <li>{t("assumptionReview", { review: inputs.reviewPercent })}</li>
+            <li>{t("assumptionScenario", { scenario: t(inputs.scenario) })}</li>
+            <li>{t("assumptionMaintenance")}</li>
+          </ul>
+        </div>
+        <div>
+          <h2 className="text-2xl font-semibold">{t("formulaExplanation")}</h2>
+          <ol className="mt-5 space-y-3 text-sm leading-relaxed text-muted-foreground">
+            <li>1. {t("formulaSavings")}</li>
+            <li>2. {t("formulaCosts")}</li>
+            <li>3. {t("formulaRoi")}</li>
+            <li>4. {t("formulaPayback")}</li>
+          </ol>
         </div>
       </section>
     </div>
   );
 }
 
-function Result({ label, children }: { label: string; children: React.ReactNode }) {
-  return <div><p className="mb-2 text-xs text-muted-foreground">{label}</p><p className="text-2xl font-semibold tracking-[-0.04em] md:text-3xl">{children}</p></div>;
-}
-
-function InputField({ label, value, onChange, prefix, min, max, step = 1 }: { label: string; value: number; onChange: (v: number) => void; prefix?: string; min: number; max: number; step?: number }) {
+function InputField({ label, value, onChange, suffix, min, max, step = 1 }: { label: string; value: number; onChange: (v: number) => void; suffix?: string; min: number; max: number; step?: number }) {
   return (
-    <div>
-      <div className="flex items-end justify-between gap-5">
-        <label className="text-sm text-muted-foreground">{label}</label>
-        <span className="text-sm font-semibold">{prefix}{value.toLocaleString()}</span>
+    <label className="block">
+      <span className="mb-1 block text-xs text-muted-foreground">{label}</span>
+      <div className="flex items-end gap-2">
+        <Input type="number" value={value} min={min} max={max} step={step} onChange={(event) => onChange(Math.min(max, Math.max(min, Number(event.target.value) || 0)))} />
+        {suffix && <span className="pb-3 text-xs font-semibold text-muted-foreground">{suffix}</span>}
       </div>
-      <Input type="number" value={value} min={min} max={max} step={step} onChange={(e) => onChange(Math.min(max, Math.max(min, Number(e.target.value) || min)))} />
-    </div>
+    </label>
   );
 }
 
-function SliderField({ label, value, onChange, min, max, suffix = "" }: { label: string; value: number; onChange: (v: number) => void; min: number; max: number; suffix?: string }) {
-  return (
-    <div>
-      <div className="mb-5 flex items-end justify-between"><label className="text-sm text-muted-foreground">{label}</label><span className="text-sm font-semibold">{value}{suffix}</span></div>
-      <Slider value={[value]} min={min} max={max} step={1} onValueChange={([v]) => onChange(v)} />
-    </div>
-  );
+function Result({ label, value }: { label: string; value: string }) {
+  return <div><p className="mb-1 text-xs text-muted-foreground">{label}</p><p className="text-xl font-semibold tracking-[-0.04em] md:text-2xl">{value}</p></div>;
 }

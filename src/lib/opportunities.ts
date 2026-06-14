@@ -89,6 +89,32 @@ const DEPARTMENT_OPPORTUNITIES: Record<
       complianceRisk: "Low",
     },
   ],
+  Marketing: [
+    {
+      id: "marketing-content",
+      title: "Marketing Content Operations",
+      description: "AI-assisted campaign production, localization, and performance optimization.",
+      implementationComplexity: "Low",
+      deploymentTime: "4-8 weeks",
+      confidenceScore: 81,
+      automationPercent: 42,
+      dataAvailability: 72,
+      complianceRisk: "Medium",
+    },
+  ],
+  Legal: [
+    {
+      id: "contract-review",
+      title: "Contract Review Copilot",
+      description: "Clause extraction, risk flagging, and first-pass contract review with human oversight.",
+      implementationComplexity: "High",
+      deploymentTime: "16-22 weeks",
+      confidenceScore: 73,
+      automationPercent: 35,
+      dataAvailability: 66,
+      complianceRisk: "High",
+    },
+  ],
 };
 
 const BASE_OPPORTUNITIES: Partial<Opportunity>[] = [
@@ -191,15 +217,14 @@ function buildOpportunity(
   const complexity = partial.implementationComplexity ?? "Medium";
   const automationPercent = partial.automationPercent ?? 50;
   const annualSavings = calculateSavings(data, automationPercent) + boost;
-  const difficultyScore = complexityToScore(complexity);
-  const valueScore = Math.min(
-    10,
-    Math.round(
-      (annualSavings / 50000) * 2 +
-        (partial.confidenceScore ?? 80) / 20 +
-        automationPercent / 25
-    )
-  );
+  const baseDifficulty = complexityToScore(complexity);
+  const riskAdjustment = partial.complianceRisk === "High" ? 1.4 : partial.complianceRisk === "Medium" ? 0.7 : 0;
+  const dataAdjustment = (100 - (partial.dataAvailability ?? 80)) / 35;
+  const difficultyScore = Math.min(9.4, Math.max(1.4, baseDifficulty + riskAdjustment + dataAdjustment));
+  const savingsScore = Math.min(10, Math.log10(Math.max(annualSavings, 10000) / 10000) * 3.2);
+  const confidenceScore = ((partial.confidenceScore ?? 80) / 100) * 2.2;
+  const automationScore = (automationPercent / 100) * 2;
+  const valueScore = Math.min(9.4, Math.max(2.2, savingsScore + confidenceScore + automationScore - 1.5));
 
   return {
     id: partial.id!,
@@ -249,7 +274,7 @@ export function generateOpportunities(data: OnboardingData): Opportunity[] {
       buildOpportunity(p, data, workflowBoost + processBoost - i * 5000)
     )
     .sort((a, b) => b.annualSavings - a.annualSavings)
-    .slice(0, 6);
+    ;
 }
 
 export function getTopRecommendation(

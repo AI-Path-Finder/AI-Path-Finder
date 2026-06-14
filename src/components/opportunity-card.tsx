@@ -21,7 +21,7 @@ export function OpportunityCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.06 }}
       onClick={onClick}
-      className={`mb-4 grid gap-7 rounded-[28px] p-7 md:grid-cols-[70px_1.4fr_1fr] md:p-10 ${
+      className={`mb-4 grid gap-7 rounded-[28px] p-7 md:grid-cols-[54px_160px_1.25fr_1fr] md:p-9 ${
         index % 3 === 0
           ? "bg-[#f0edff]"
           : index % 3 === 1
@@ -32,6 +32,7 @@ export function OpportunityCard({
       <span className="text-sm text-muted-foreground">
         {String(index + 1).padStart(2, "0")}
       </span>
+      <OpportunityGraphic opportunity={opportunity} />
       <div>
         <p className="eyebrow mb-3">{t("aiOpportunity")}</p>
         <h2 className="text-3xl font-semibold leading-tight tracking-[-0.045em] md:text-4xl">
@@ -48,6 +49,27 @@ export function OpportunityCard({
         <Metric label={t("automation")} value={`${opportunity.automationPercent}%`} />
       </dl>
     </motion.article>
+  );
+}
+
+function OpportunityGraphic({ opportunity }: { opportunity: Opportunity }) {
+  const bars = [
+    { value: opportunity.automationPercent, color: "bg-[#6b4eff]" },
+    { value: opportunity.confidenceScore, color: "bg-[#ff8a6c]" },
+    { value: opportunity.dataAvailability, color: "bg-[#2f1c4d]" },
+  ];
+  return (
+    <div className="flex h-36 items-end gap-2 rounded-2xl bg-white/55 p-4" aria-hidden="true">
+      {bars.map((bar, index) => (
+        <div key={index} className="flex h-full flex-1 items-end rounded-full bg-white/80 p-1">
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: `${bar.value}%` }}
+            className={`w-full rounded-full ${bar.color}`}
+          />
+        </div>
+      ))}
+    </div>
   );
 }
 

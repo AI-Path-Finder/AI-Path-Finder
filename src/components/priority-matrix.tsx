@@ -170,9 +170,11 @@ export function PriorityMatrix({ opportunities }: PriorityMatrixProps) {
           </text>
 
           {/* Data points */}
-          {opportunities.map((opp) => {
-            const cx = toX(opp.difficultyScore);
-            const cy = toY(opp.valueScore);
+          {opportunities.map((opp, index) => {
+            const offsetX = ((index % 3) - 1) * 7;
+            const offsetY = ((index % 4) - 1.5) * 5;
+            const cx = toX(opp.difficultyScore) + offsetX;
+            const cy = toY(opp.valueScore) + offsetY;
             const isHovered = hoveredId === opp.id;
             return (
               <g
