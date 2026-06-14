@@ -23,17 +23,17 @@ export default function LandingPage() {
     <PageTransition>
       <div className="overflow-hidden rounded-b-[42px] bg-[#2f1c4d] text-white md:rounded-b-[72px]">
         <Nav inverted />
-        <section className="flex min-h-[100dvh] items-center px-6 pb-8 pt-24 md:px-10 md:py-24">
-          <div className="mx-auto grid w-full max-w-[1440px] gap-8 lg:grid-cols-[1fr_.82fr] lg:items-center">
+        <section className="px-6 pb-14 pt-28 md:px-10 md:pb-20 md:pt-32">
+          <div className="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[1fr_.85fr] lg:items-center">
             <div>
-              <p className="mb-3 text-sm font-semibold text-[#d7c8ff]">{t("heroEyebrow")}</p>
-              <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl text-[clamp(2.75rem,6vw,6.4rem)] font-semibold leading-[.92] tracking-[-.07em]">
+              <p className="mb-5 text-sm font-semibold text-[#d7c8ff]">{t("heroEyebrow")}</p>
+              <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl text-[clamp(3.1rem,6.2vw,6.6rem)] font-semibold leading-[.92] tracking-[-.075em]">
                 {t("heroTitle")}
               </motion.h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-white/68 md:text-lg">
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/68 md:text-xl">
                 {t("heroText")}
               </p>
-              <div className="mt-6 flex flex-wrap items-center gap-4">
+              <div className="mt-7 flex flex-wrap items-center gap-4">
                 <Button size="lg" className="bg-white text-[#2f1c4d] hover:bg-[#f2ecff]" asChild>
                   <Link href="/onboarding">{t("start")} <ArrowRight /></Link>
                 </Button>
@@ -136,15 +136,15 @@ function AssessmentPreview() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0, rotate: 2, y: 20 }} animate={{ opacity: 1, rotate: -1, y: 0 }} transition={{ delay: .15, duration: .5 }} className="relative mx-auto hidden w-full max-w-lg lg:block">
+    <motion.div initial={{ opacity: 0, rotate: 2, y: 20 }} animate={{ opacity: 1, rotate: -2, y: 0 }} transition={{ delay: .15, duration: .5 }} className="relative mx-auto w-full max-w-xl">
       <div className="absolute -left-8 -top-8 h-28 w-28 rounded-full bg-[#ffdd8d]" />
       <div className="absolute -bottom-10 -right-8 h-36 w-36 rounded-[35%] bg-[#ff9d86]" />
-      <div className="relative rounded-[28px] bg-[#f8f5ff] p-6 text-[#2f1c4d] shadow-[0_28px_80px_rgba(0,0,0,.28)]">
-        <div className="mb-7 flex justify-between text-xs text-[#2f1c4d]/55"><span>AdoptAI</span><span>{t("stepOf", { current: 1, total: 7 })}</span></div>
+      <div className="relative rounded-[28px] bg-[#f8f5ff] p-6 text-[#2f1c4d] shadow-[0_28px_80px_rgba(0,0,0,.28)] md:p-9">
+        <div className="mb-12 flex justify-between text-xs text-[#2f1c4d]/55"><span>AdoptAI</span><span>{t("stepOf", { current: 1, total: 7 })}</span></div>
         <p className="mb-3 text-sm text-[#6b4eff]">01 →</p>
-        <h2 className="text-3xl font-semibold leading-tight tracking-[-.05em]">{t("industryQuestion")}</h2>
+        <h2 className="text-3xl font-semibold leading-tight tracking-[-.05em] md:text-5xl">{t("industryQuestion")}</h2>
         <p className="mt-4 text-sm text-[#2f1c4d]/60">{t("industryHelp")}</p>
-        <div className="mt-5 space-y-2">
+        <div className="mt-7 space-y-2">
           {industries.map(([value, key], i) => (
             <button
               type="button"
