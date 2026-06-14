@@ -1,10 +1,10 @@
 "use client";
 
-const INK = "#2f1c4d";
-const LAVENDER = "#bba9ff";
-const PEACH = "#ff9d86";
-const CREAM = "#fff0cb";
-const PAPER = "#fffdf8";
+const INK = "#8778a3";
+const LAVENDER = "#cbbdff";
+const PEACH = "#f0a28d";
+const CREAM = "#f3e8cc";
+const PAPER = "#f6f0ff";
 
 export function OpportunityGraphic({
   opportunityId,
@@ -17,7 +17,7 @@ export function OpportunityGraphic({
 }) {
   return (
     <div className={`${compact ? "h-16 w-20" : "h-40 w-full"} ${className}`} aria-hidden="true">
-      <svg viewBox="0 0 160 160" className="h-full w-full overflow-visible">
+      <svg viewBox="0 0 160 160" className="h-full w-full overflow-visible opacity-95">
         {iconFor(opportunityId)}
       </svg>
     </div>
