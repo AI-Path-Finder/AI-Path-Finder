@@ -32,31 +32,63 @@ export interface Opportunity {
 export interface ROIInputs {
   employeeCount: number;
   averageSalary: number;
-  manualHoursPerWeek: number;
+  manualHoursPerDay: number;
+  tasksPerMonth: number;
+  currentOperationalCost: number;
+  developmentCost: number;
+  consultingCost: number;
+  infrastructureCost: number;
   automationPercent: number;
+  productivityIncreasePercent: number;
+  manualWorkReductionPercent: number;
+  errorReductionPercent: number;
+  processAccelerationPercent: number;
   softwareCost: number;
   integrationCost: number;
   trainingCost: number;
-  annualMaintenanceCost: number;
+  monthlyApiCost: number;
+  monthlyLicensingCost: number;
+  monthlyMaintenanceCost: number;
+  monthlyMonitoringCost: number;
+  annualRetrainingCost: number;
+  monthlySupportCost: number;
+  monthlyOperationalMaintenanceCost: number;
   reviewPercent: number;
+  dataQuality: number;
+  processMaturity: number;
+  adoptionReadiness: number;
+  infrastructureReadiness: number;
   currency: Currency;
   scenario: ROIScenario;
 }
 
 export interface ROIResults {
+  scenario: ROIScenario;
+  baselineAnnualCost: number;
+  annualGrossBenefit: number;
   annualSavings: number;
   implementationCost: number;
-  annualMaintenanceCost: number;
+  annualRecurringCost: number;
+  netFirstYearSavings: number;
+  firstYearProfit: number;
   paybackMonths: number;
+  breakEvenMonth: number | null;
   roi12Month: number;
   value24Month: number;
   effectiveAutomationPercent: number;
-  monthlyData: { month: string; savings: number; cost: number; net: number }[];
+  operationalEfficiencyGain: number;
+  costReductionPercent: number;
+  confidenceScore: number;
+  costBeforeAI: number;
+  costAfterAI: number;
+  monthlyData: { month: string; cumulativeBenefit: number; cumulativeCost: number; net: number }[];
 }
 
 export interface Recommendation {
   opportunity: Opportunity;
   reasons: string[];
+  roiSnapshot?: ROIResults;
+  currency?: Currency;
 }
 
 export interface AssessmentState {

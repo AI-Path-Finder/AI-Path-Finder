@@ -1,13 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { formatCurrency } from "@/lib/utils";
 import type { Recommendation } from "@/types/assessment";
 import { useLanguage } from "@/context/language-provider";
 
 export function ExecutiveSummary({ recommendation }: { recommendation: Recommendation }) {
   const { t, td } = useLanguage();
-  const { opportunity, reasons } = recommendation;
+  const { opportunity, reasons, roiSnapshot } = recommendation;
+  const currency = recommendation.currency ?? "EUR";
+  const money = (value: number) => new Intl.NumberFormat(undefined, { style: "currency", currency, maximumFractionDigits: 0 }).format(value);
   return (
     <motion.article initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
       <p className="eyebrow mb-7">{t("executiveRecommendation")}</p>
@@ -18,10 +19,11 @@ export function ExecutiveSummary({ recommendation }: { recommendation: Recommend
         {t("recommendationText")}
       </p>
 
-      <dl className="mt-16 grid gap-8 border-y border-border py-10 sm:grid-cols-3">
-        <Metric label={t("projectedSavings")} value={formatCurrency(opportunity.annualSavings)} />
-        <Metric label={t("expectedDeployment")} value={td(opportunity.deploymentTime)} />
-        <Metric label={t("recommendationConfidence")} value={`${opportunity.confidenceScore}%`} />
+      <dl className="mt-16 grid gap-8 border-y border-border py-10 sm:grid-cols-2 xl:grid-cols-4">
+        <Metric label={t("projectedSavings")} value={money(roiSnapshot?.annualSavings ?? opportunity.annualSavings)} />
+        <Metric label={t("roi12")} value={roiSnapshot ? `${roiSnapshot.roi12Month}%` : "—"} />
+        <Metric label={t("paybackPeriod")} value={roiSnapshot ? (roiSnapshot.breakEvenMonth ? `${roiSnapshot.paybackMonths}${t("months")}` : t("notReached")) : td(opportunity.deploymentTime)} />
+        <Metric label={t("recommendationConfidence")} value={`${roiSnapshot?.confidenceScore ?? opportunity.confidenceScore}%`} />
       </dl>
 
       <section className="grid gap-10 border-b border-border py-14 md:grid-cols-[1fr_2fr]">

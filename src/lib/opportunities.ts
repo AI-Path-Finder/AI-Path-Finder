@@ -1,4 +1,4 @@
-import type { OnboardingData, Opportunity } from "@/types/assessment";
+import type { OnboardingData, Opportunity, ROIResults } from "@/types/assessment";
 import { complexityToScore } from "@/lib/utils";
 
 const DEPARTMENT_OPPORTUNITIES: Record<
@@ -297,12 +297,17 @@ export function getTopRecommendation(
 }
 
 export function buildRecommendationReasons(
-  opportunity: Opportunity
+  opportunity: Opportunity,
+  roi?: ROIResults
 ): string[] {
   const reasons: string[] = [];
 
-  if (opportunity.annualSavings >= 200000) {
-    reasons.push("Highest projected ROI among evaluated initiatives");
+  if (roi && roi.roi12Month >= 0) {
+    reasons.push("Financial model confirms a positive first-year return");
+  } else if (roi) {
+    reasons.push("The investment case requires further cost or benefit validation");
+  } else if (opportunity.annualSavings >= 200000) {
+    reasons.push("Strong projected financial impact among evaluated initiatives");
   } else {
     reasons.push("Strong return on investment relative to implementation cost");
   }

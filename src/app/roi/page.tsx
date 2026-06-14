@@ -20,12 +20,16 @@ export default function ROIPage() {
   const selected = getSelectedOpportunity() ?? opportunities[0];
   useEffect(() => { if (opportunities.length === 0) router.replace("/onboarding"); }, [opportunities.length, router]);
   const inputs: ROIInputs = useMemo(() => {
-    if ("softwareCost" in roiInputs && "scenario" in roiInputs) return roiInputs as ROIInputs;
     const employeeCount = onboarding.companySize === "1000+" ? 200 : onboarding.companySize === "201-1000" ? 80 : onboarding.companySize === "51-200" ? 25 : 10;
-    return defaultROIInputs(employeeCount, selected?.automationPercent ?? 50, implementationCostForComplexity(selected?.implementationComplexity ?? "Medium", onboarding.companySize ?? "51-200"));
+    const defaults = defaultROIInputs(employeeCount, selected?.automationPercent ?? 50, implementationCostForComplexity(selected?.implementationComplexity ?? "Medium", onboarding.companySize ?? "51-200"));
+    defaults.dataQuality = selected?.dataAvailability ?? defaults.dataQuality;
+    defaults.processMaturity = selected?.confidenceScore ?? defaults.processMaturity;
+    defaults.adoptionReadiness = selected?.implementationComplexity === "Low" ? 82 : selected?.implementationComplexity === "High" ? 52 : 68;
+    defaults.infrastructureReadiness = Math.round((defaults.dataQuality + defaults.processMaturity) / 2);
+    return { ...defaults, ...roiInputs } as ROIInputs;
   }, [roiInputs, onboarding, selected]);
   if (opportunities.length === 0 || !selected) return null;
-  const handleContinue = () => { setROIInputs(inputs); generateRecommendation(); router.push("/recommendation"); };
+  const handleContinue = () => { setROIInputs(inputs); generateRecommendation(inputs); router.push("/recommendation"); };
 
   return (
     <PageTransition>

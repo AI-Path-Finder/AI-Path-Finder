@@ -21,7 +21,7 @@ import {
   generateOpportunities,
   getTopRecommendation,
 } from "@/lib/opportunities";
-import { defaultROIInputs } from "@/lib/roi";
+import { calculateROI, defaultROIInputs } from "@/lib/roi";
 import { implementationCostForComplexity } from "@/lib/utils";
 
 const STORAGE_KEY = "adopt-ai-assessment";
@@ -69,7 +69,7 @@ interface AssessmentContextValue extends AssessmentState {
   completeOnboarding: (data: OnboardingData) => void;
   setSelectedOpportunity: (id: string) => void;
   setROIInputs: (inputs: Partial<ROIInputs>) => void;
-  generateRecommendation: () => void;
+  generateRecommendation: (inputs?: ROIInputs) => void;
   resetAssessment: () => void;
   getSelectedOpportunity: () => Opportunity | undefined;
 }
@@ -131,23 +131,29 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
-  const generateRecommendation = useCallback(() => {
+  const generateRecommendation = useCallback((inputs?: ROIInputs) => {
     setState((prev) => {
       if (prev.opportunities.length === 0) return prev;
       const top =
         prev.opportunities.find((opportunity) => opportunity.id === prev.selectedOpportunityId) ??
         getTopRecommendation(prev.opportunities);
+      const financialInputs = inputs ?? prev.roiInputs;
+      const roiSnapshot = Object.keys(financialInputs).length > 0
+        ? calculateROI(financialInputs as ROIInputs)
+        : undefined;
       const recommendation: Recommendation = {
         opportunity: top,
-        reasons: buildRecommendationReasons(top),
+        reasons: buildRecommendationReasons(top, roiSnapshot),
+        roiSnapshot,
+        currency: (financialInputs as Partial<ROIInputs>).currency,
       };
       return {
         ...prev,
         selectedOpportunityId: top.id,
         recommendation,
         roiInputs:
-          Object.keys(prev.roiInputs).length > 0
-            ? prev.roiInputs
+          Object.keys(financialInputs).length > 0
+            ? financialInputs
             : defaultROIInputs(
                 prev.onboarding.companySize === "1000+"
                   ? 200
